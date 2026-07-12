@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>台风三维追踪 · Typhoon 3D Globe Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./cesium/Widgets/widgets.css" />
+<script>window.CESIUM_BASE_URL = "./cesium/";</script>
+<script src="./cesium/Cesium.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --bg:#040711; --panel:rgba(14,21,40,.72); --border:rgba(120,160,240,.18);
+    --txt:#eaf1ff; --sub:#9db0d6; --accent:#3fd0ff; --accent2:#6a8bff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:'Noto Sans SC',system-ui,sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
+  #globe{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#0a1228,#02040a 80%)}
+
+  /* Cesium chrome cleanup */
+  .cesium-widget-credits{display:none!important}
+  .cesium-viewer-bottom{display:none!important}
+  .cesium-widget canvas{outline:none}
+
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'opsz' 24;vertical-align:middle}
+  .glass{background:var(--panel);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border:1px solid var(--border);box-shadow:0 12px 44px rgba(0,0,0,.5)}
+  .scroll::-webkit-scrollbar{width:6px}
+  .scroll::-webkit-scrollbar-thumb{background:rgba(120,160,240,.4);border-radius:8px}
+  .scroll::-webkit-scrollbar-track{background:transparent}
+
+  #topbar{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 18px;
+    background:linear-gradient(180deg,rgba(4,7,17,.95),rgba(4,7,17,.45) 65%,transparent);pointer-events:none}
+  #topbar>*{pointer-events:auto}
+  .logo-dot{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;position:relative;
+    background:radial-gradient(circle at 30% 30%,#5ee0ff,#2a6bff);box-shadow:0 0 22px rgba(63,208,255,.7)}
+  .spin{animation:spin 5s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .title-grad{background:linear-gradient(90deg,#eaf1ff,#7fd7ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+  #left{position:absolute;top:72px;left:16px;bottom:16px;width:340px;z-index:15;border-radius:18px;display:flex;flex-direction:column;overflow:hidden}
+  #left .head{padding:14px 16px 12px;border-bottom:1px solid var(--border)}
+  .ty-select{width:100%;background:#0b1428;border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:9px 10px;font-size:13px;outline:none}
+  .ty-select:focus{border-color:var(--accent)}
+  .mode-seg{display:flex;gap:6px;margin-top:10px}
+  .mode-seg button{flex:1;background:rgba(9,16,34,.55);border:1px solid var(--border);color:var(--sub);padding:7px 0;border-radius:9px;font-size:12.5px;cursor:pointer;transition:.15s}
+  .mode-seg button.on{background:linear-gradient(90deg,rgba(63,208,255,.22),rgba(106,139,255,.12));color:#fff;border-color:var(--accent);font-weight:700}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .stat{background:rgba(9,16,34,.65);border:1px solid var(--border);border-radius:12px;padding:10px 12px;position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);opacity:.7}
+  .stat .k{font-size:11px;color:var(--sub);letter-spacing:.4px}
+  .stat .v{font-size:18px;font-weight:700;margin-top:2px}
+  .stat .u{font-size:11px;color:var(--sub);font-weight:400}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;color:#04121f;box-shadow:0 0 16px currentColor}
+  .ty-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;font-size:12.5px;transition:.15s;border:1px solid transparent;margin-bottom:5px;background:rgba(9,16,34,.5)}
+  .ty-chip:hover{background:rgba(63,208,255,.12)}
+  .ty-chip.on{border-color:var(--accent);background:rgba(63,208,255,.16)}
+  .ty-chip .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 8px currentColor}
+  .ty-chip .live{font-size:9px;color:#04121f;background:#00e08a;border-radius:5px;padding:1px 5px;font-weight:700}
+  .pt-row{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;cursor:pointer;font-size:12px;transition:.15s}
+  .pt-row:hover{background:rgba(63,208,255,.12)}
+  .pt-row .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 6px currentColor}
+  .legend-row{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sub);padding:2px 0}
+  .legend-row .sw{width:16px;height:5px;border-radius:3px}
+
+  #rightstack{position:absolute;right:16px;top:72px;z-index:15;display:flex;flex-direction:column;gap:12px;width:198px}
+  .card{border-radius:14px;padding:12px 14px}
+  .seg{display:flex;flex-direction:column;gap:6px}
+  .seg button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:rgba(9,16,34,.5);border:1px solid var(--border);color:var(--sub);padding:8px 10px;border-radius:10px;font-size:12.5px;cursor:pointer;transition:.15s}
+  .seg button:hover{color:var(--txt);border-color:var(--accent)}
+  .seg button.on{background:linear-gradient(90deg,rgba(63,208,255,.22),rgba(106,139,255,.12));color:#fff;border-color:var(--accent)}
+  .seg button .material-symbols-outlined{font-size:18px}
+  .opacity-row{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11px;color:var(--sub)}
+  .cloud-sel{width:100%;background:#0b1428;border:1px solid var(--border);color:var(--txt);border-radius:9px;padding:7px 8px;font-size:11.5px;margin-top:8px;outline:none}
+
+  #controls{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;z-index:16;display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:14px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 420px)}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);color:var(--txt);padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;transition:.15s;background:rgba(18,34,68,.85)}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.on{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04121f;border-color:var(--accent);font-weight:700}
+  #timeline{width:200px}
+  input[type=range]{-webkit-appearance:none;height:5px;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--accent);cursor:pointer}
+
+  #loading{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;background:rgba(4,7,17,.85);backdrop-filter:blur(4px)}
+  .ring{width:54px;height:54px;border-radius:50%;border:4px solid rgba(120,160,240,.25);border-top-color:var(--accent);animation:spin 1s linear infinite}
+  #toast{position:absolute;top:76px;left:50%;transform:translateX(-50%);z-index:30;padding:9px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+  #toast.show{opacity:1}
+
+  #popup{position:absolute;z-index:25;background:rgba(11,20,40,.96);color:#eaf1ff;border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:12px;pointer-events:none;transform:translate(-50%,-118%);white-space:nowrap;display:none;box-shadow:0 8px 24px rgba(0,0,0,.6)}
+  #popup b{color:var(--accent)}
+  .mono{font-family:'JetBrains Mono',monospace}
+
+  @media (max-width:900px){
+    #left{width:calc(100% - 32px);bottom:auto;max-height:44%}
+    #rightstack{display:none}
+    #controls{max-width:calc(100% - 32px)}
+    #timeline{width:130px}
+  }
+</style>
+</head>
+<body>
+<div id="globe"></div>
+<div id="popup"></div>
+
+<div id="topbar">
+  <div class="logo-dot"><span class="material-symbols-outlined spin" style="color:#04121f;font-size:23px">cyclone</span></div>
+  <div>
+    <div class="title-grad" style="font-size:17px;font-weight:900;letter-spacing:.5px">台风三维追踪 · 3D Globe</div>
+    <div style="font-size:11px;color:var(--sub);margin-top:1px">路径:中央气象台 · 三维高程:Cesium World Terrain · 地形底图:Google地形 / NASA晕渲</div>
+  </div>
+  <div style="flex:1"></div>
+  <div id="clock" class="mono" style="font-size:12px;color:var(--sub)"></div>
+</div>
+
+<div id="left" class="glass">
+  <div class="head">
+    <div style="font-size:12px;color:var(--sub);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
+      <span><span class="material-symbols-outlined" style="font-size:16px;color:var(--accent)">storm</span> 台风年份</span>
+      <select id="yearSel" class="ty-select" style="width:100px;padding:5px 6px;font-size:12px"></select>
+    </div>
+    <div class="mode-seg">
+      <button id="modeAll" class="on"><span class="material-symbols-outlined" style="font-size:15px">public</span> 全部显示</button>
+      <button id="modeSingle"><span class="material-symbols-outlined" style="font-size:15px">my_location</span> 单个聚焦</button>
+    </div>
+    <div id="tyChips" style="margin-top:10px;max-height:130px;overflow-y:auto" class="scroll"></div>
+  </div>
+
+  <div class="scroll" style="overflow-y:auto;padding:14px 16px;flex:1">
+    <div style="font-size:11px;color:var(--sub);margin-bottom:6px">当前聚焦台风</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div>
+        <div id="tyName" style="font-size:21px;font-weight:900">—</div>
+        <div id="tyEn" style="font-size:11px;color:var(--sub)"></div>
+      </div>
+      <span id="tyBadge" class="badge" style="background:#3fd0ff;color:#3fd0ff">—</span>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:10px">
+      <div class="stat"><div class="k">中心气压</div><div class="v" id="sPres">—<span class="u"> hPa</span></div></div>
+      <div class="stat"><div class="k">最大风速</div><div class="v" id="sWind">—<span class="u"> m/s</span></div></div>
+      <div class="stat"><div class="k">移动方向 / 风向</div><div class="v" id="sDir" style="font-size:15px">—</div></div>
+      <div class="stat"><div class="k">移动速度</div><div class="v" id="sSpeed">—<span class="u"> km/h</span></div></div>
+    </div>
+    <div class="stat" style="margin-bottom:12px">
+      <div class="k">当前中心位置 · 观测时间</div>
+      <div class="v mono" id="sPos" style="font-size:14px">—</div>
+      <div id="sTime" style="font-size:11px;color:var(--sub);margin-top:3px"></div>
+    </div>
+
+    <div style="font-size:12px;color:var(--sub);margin:6px 0 4px;display:flex;justify-content:space-between">
+      <span><span class="material-symbols-outlined" style="font-size:15px;color:var(--accent)">timeline</span> 历史观测点</span>
+      <span id="ptCount"></span>
+    </div>
+    <div id="ptList"></div>
+  </div>
+</div>
+
+<div id="rightstack">
+  <div class="card glass">
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px"><span class="material-symbols-outlined" style="font-size:15px;color:var(--accent)">filter_drama</span> 卫星云图</div>
+    <div class="seg">
+      <button id="cloudToggle"><span class="material-symbols-outlined">cloud</span>显示云图</button>
+    </div>
+    <select id="cloudSel" class="cloud-sel">
+      <option value="ir">葵花9号红外云图 · 近实时</option>
+      <option value="geocolor">GOES GeoColor · 近实时</option>
+      <option value="truecolor">VIIRS 真彩云图 · 每日</option>
+    </select>
+    <div class="opacity-row" id="cloudOpRow">
+      <span>浓度</span>
+      <input type="range" id="cloudOp" min="20" max="100" value="50" style="flex:1" />
+    </div>
+    <div id="cloudDate" style="font-size:10.5px;color:var(--sub);margin-top:6px"></div>
+  </div>
+
+  <div class="card glass">
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px"><span class="material-symbols-outlined" style="font-size:15px;color:var(--accent)">layers</span> 地形底图</div>
+    <div class="seg">
+      <button id="baseTopo"><span class="material-symbols-outlined">terrain</span>地形图</button>
+      <button id="baseRelief"><span class="material-symbols-outlined">landscape</span>晕渲地形</button>
+    </div>
+  </div>
+
+  <div class="card glass">
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px"><span class="material-symbols-outlined" style="font-size:15px;color:var(--accent)">air</span> 动态风场</div>
+    <div class="seg">
+      <button id="windToggle"><span class="material-symbols-outlined">air</span>显示风场</button>
+    </div>
+    <div class="opacity-row" id="windOpRow">
+      <span>浓度</span>
+      <input type="range" id="windOp" min="20" max="100" value="90" style="flex:1" />
+    </div>
+    <div class="opacity-row">
+      <span>密度</span>
+      <input type="range" id="windDensity" min="1000" max="6000" step="200" value="3200" style="flex:1" />
+    </div>
+    <div style="margin-top:9px">
+      <div id="windLegendBar" style="height:8px;border-radius:5px;width:100%"></div>
+      <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--sub);margin-top:3px">
+        <span>0</span><span>10</span><span>20</span><span>30</span><span>40 m/s</span>
+      </div>
+    </div>
+    <div id="windStatus" style="font-size:10.5px;color:var(--sub);margin-top:7px">正在获取风场数据…</div>
+    <div style="font-size:9.5px;color:var(--sub);margin-top:2px">数据：Open-Meteo 10m 风场</div>
+  </div>
+
+  <div class="card glass">
+    <div style="font-size:12px;font-weight:700;margin-bottom:8px">强度等级图例</div>
+    <div id="legendBody"></div>
+    <div style="border-top:1px solid var(--border);margin:9px 0 7px"></div>
+    <div class="legend-row"><span class="material-symbols-outlined" style="font-size:15px;color:#fff">radio_button_checked</span>实况路径</div>
+    <div class="legend-row"><span style="width:16px;height:0;border-top:2px dashed #ff7ad9"></span>预报路径</div>
+    <div class="legend-row"><span class="material-symbols-outlined" style="font-size:15px;color:#3fd0ff">trip_origin</span>七级风圈</div>
+    <div class="legend-row"><span class="material-symbols-outlined" style="font-size:15px;color:#ffd500">navigation</span>移动方向(风向)</div>
+  </div>
+</div>
+
+<div id="controls" class="glass">
+  <button class="btn" id="playBtn"><span class="material-symbols-outlined" style="font-size:18px">play_arrow</span>回放</button>
+  <input type="range" id="timeline" min="0" max="0" value="0" />
+  <span id="tlLabel" class="mono" style="font-size:12px;color:var(--sub);min-width:132px"></span>
+  <div style="width:1px;height:22px;background:var(--border)"></div>
+  <button class="btn" id="fcBtn"><span class="material-symbols-outlined" style="font-size:18px">route</span>预报</button>
+  <button class="btn" id="ringBtn"><span class="material-symbols-outlined" style="font-size:18px">trip_origin</span>风圈</button>
+  <button class="btn" id="homeBtn"><span class="material-symbols-outlined" style="font-size:18px">globe</span>全景</button>
+  <button class="btn" id="refreshBtn"><span class="material-symbols-outlined" style="font-size:18px">refresh</span>刷新</button>
+  <button class="btn" id="autoBtn"><span class="material-symbols-outlined" style="font-size:18px">autorenew</span>自动</button>
+</div>
+
+<div id="toast" class="glass"></div>
+<div id="loading"><div class="ring"></div><div style="font-size:13px;color:var(--sub)">正在加载三维地球与台风数据…</div></div>
+
+<script src="./app.js"></script>
+<script src="./wind-layer.js"></script>
+</body>
+</html>

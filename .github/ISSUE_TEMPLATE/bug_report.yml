@@ -1,0 +1,37 @@
+name: 🐛 Bug 反馈
+description: 报告一个问题，帮助我们改进
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 清晰描述你遇到的问题
+      placeholder: 例如：切换到风场图层后页面卡死
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开在线演示
+        2. 点击 '...'
+        3. 出现错误
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器 / 系统
+      placeholder: 例如：Chrome 120 / macOS 14
+    validations:
+      required: false
+  - type: textarea
+    id: console
+    attributes:
+      label: 控制台报错（可选）
+      description: 按 F12 打开开发者工具，粘贴 Console 中的错误信息
+    validations:
+      required: false
