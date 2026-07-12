@@ -83,21 +83,52 @@
   input[type=range]{-webkit-appearance:none;height:5px;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));outline:none}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--accent);cursor:pointer}
 
-  #loading{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;background:rgba(4,7,17,.85);backdrop-filter:blur(4px)}
-  .ring{width:54px;height:54px;border-radius:50%;border:4px solid rgba(120,160,240,.25);border-top-color:var(--accent);animation:spin 1s linear infinite}
-  #toast{position:absolute;top:76px;left:50%;transform:translateX(-50%);z-index:30;padding:9px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+  #loading{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(10,18,40,.92),rgba(4,7,17,.94));backdrop-filter:blur(6px);transition:opacity .45s ease}
+  #loading.hide{opacity:0;pointer-events:none}
+  .ring{width:56px;height:56px;border-radius:50%;border:4px solid rgba(120,160,240,.22);border-top-color:var(--accent);border-right-color:var(--accent2);animation:spin 1s linear infinite;box-shadow:0 0 24px rgba(63,208,255,.25)}
+  #loadMsg{font-size:13px;color:var(--txt);font-weight:500;letter-spacing:.3px}
+  #loadSub{font-size:11px;color:var(--sub);margin-top:-6px}
+  #toast{position:absolute;top:76px;left:50%;transform:translateX(-50%);z-index:30;padding:9px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
   #toast.show{opacity:1}
+  #toast.err{border-color:#ff6b6b!important;color:#ffd0d0}
 
   #popup{position:absolute;z-index:25;background:rgba(11,20,40,.96);color:#eaf1ff;border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:12px;pointer-events:none;transform:translate(-50%,-118%);white-space:nowrap;display:none;box-shadow:0 8px 24px rgba(0,0,0,.6)}
   #popup b{color:var(--accent)}
   .mono{font-family:'JetBrains Mono',monospace}
 
+  /* 移动端面板切换按钮（仅小屏显示） */
+  #mobBar{display:none}
+  .mob-toggle{pointer-events:auto;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:var(--txt)}
+  .mob-toggle.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f}
+  .panel-close{display:none}
+
   @media (max-width:900px){
-    #left{width:calc(100% - 32px);bottom:auto;max-height:44%}
-    #rightstack{display:none}
-    #controls{max-width:calc(100% - 32px)}
-    #timeline{width:130px}
+    #topbar{padding:10px 12px;gap:8px}
+    #topbar .subtitle{display:none}
+    #clock{display:none}
+    #mobBar{display:flex;gap:8px}
+
+    /* 左右面板改为从侧边滑入的抽屉，默认隐藏 */
+    #left{width:min(340px,86vw);top:64px;bottom:64px;transform:translateX(-115%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:30}
+    #left.open{transform:translateX(0)}
+    #rightstack{display:flex;right:12px;top:64px;bottom:64px;width:min(220px,80vw);overflow-y:auto;padding-right:2px;transform:translateX(120%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:30;scrollbar-width:none}
+    #rightstack::-webkit-scrollbar{display:none}
+    #rightstack.open{transform:translateX(0)}
+    .panel-close{display:grid;place-items:center;position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:9px;background:rgba(9,16,34,.7);border:1px solid var(--border);color:var(--sub);cursor:pointer;z-index:5}
+    #rightstack .panel-close{position:sticky;margin-left:auto;top:0}
+
+    #controls{max-width:calc(100% - 16px);bottom:10px;gap:6px;padding:7px 10px}
+    #controls .btn span:not(.material-symbols-outlined){display:none}
+    #controls .btn{padding:8px 9px}
+    #timeline{width:96px}
+    #tlLabel{min-width:0;font-size:10px}
+    #toast{top:64px}
   }
+  @media (max-width:520px){
+    #left{width:88vw;top:60px}
+    #rightstack{width:82vw}
+  }
+
 </style>
 </head>
 <body>
@@ -108,13 +139,18 @@
   <div class="logo-dot"><span class="material-symbols-outlined spin" style="color:#04121f;font-size:23px">cyclone</span></div>
   <div>
     <div class="title-grad" style="font-size:17px;font-weight:900;letter-spacing:.5px">台风三维追踪 · 3D Globe</div>
-    <div style="font-size:11px;color:var(--sub);margin-top:1px">路径:中央气象台 · 三维高程:Cesium World Terrain · 地形底图:Google地形 / NASA晕渲</div>
+    <div class="subtitle" style="font-size:11px;color:var(--sub);margin-top:1px">路径:中央气象台 · 三维高程:Cesium World Terrain · 地形底图:Google地形 / NASA晕渲</div>
   </div>
   <div style="flex:1"></div>
+  <div id="mobBar">
+    <div class="mob-toggle glass" id="mobLeft" title="台风列表"><span class="material-symbols-outlined">storm</span></div>
+    <div class="mob-toggle glass" id="mobRight" title="图层控制"><span class="material-symbols-outlined">layers</span></div>
+  </div>
   <div id="clock" class="mono" style="font-size:12px;color:var(--sub)"></div>
 </div>
 
 <div id="left" class="glass">
+  <div class="panel-close" data-panel="left"><span class="material-symbols-outlined" style="font-size:18px">close</span></div>
   <div class="head">
     <div style="font-size:12px;color:var(--sub);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">
       <span><span class="material-symbols-outlined" style="font-size:16px;color:var(--accent)">storm</span> 台风年份</span>
@@ -158,6 +194,7 @@
 </div>
 
 <div id="rightstack">
+  <div class="panel-close" data-panel="right"><span class="material-symbols-outlined" style="font-size:18px">close</span></div>
   <div class="card glass">
     <div style="font-size:12px;font-weight:700;margin-bottom:8px"><span class="material-symbols-outlined" style="font-size:15px;color:var(--accent)">filter_drama</span> 卫星云图</div>
     <div class="seg">
@@ -230,7 +267,7 @@
 </div>
 
 <div id="toast" class="glass"></div>
-<div id="loading"><div class="ring"></div><div style="font-size:13px;color:var(--sub)">正在加载三维地球与台风数据…</div></div>
+<div id="loading"><div class="ring"></div><div id="loadMsg">正在加载三维地球与台风数据…</div><div id="loadSub">首次加载需下载地形与云图瓦片，请稍候</div></div>
 
 <script src="./app.js"></script>
 <script src="./wind-layer.js"></script>

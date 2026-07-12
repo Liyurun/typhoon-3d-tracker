@@ -50,8 +50,18 @@ function nrtTime(lagMin){
 function ymd(offsetDays){ const d=new Date(Date.now()+offsetDays*86400000); return d.toISOString().slice(0,10); }
 
 const $=(id)=>document.getElementById(id);
-function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2800); }
-function showLoading(b){ $("loading").style.display=b?"flex":"none"; }
+function toast(msg,isErr){ const t=$("toast"); t.textContent=msg; t.classList.toggle("err",!!isErr); t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),isErr?4200:2800); }
+function showLoading(b,msg,sub){
+  const el=$("loading"); if(!el) return;
+  if(b){
+    if(msg){ const m=$("loadMsg"); if(m) m.textContent=msg; }
+    if(sub!==undefined){ const s=$("loadSub"); if(s) s.textContent=sub; }
+    el.style.display="flex"; el.classList.remove("hide");
+  }else{
+    el.classList.add("hide");
+    clearTimeout(el._t); el._t=setTimeout(()=>{ el.style.display="none"; },450);
+  }
+}
 function tickClock(){ $("clock").textContent="UTC+8 "+new Date().toLocaleString("zh-CN",{hour12:false}); }
 setInterval(tickClock,1000); tickClock();
 
@@ -315,11 +325,11 @@ function initYearSelector(){
 }
 
 async function loadYear(year){
-  showLoading(true);
+  showLoading(true,"正在加载台风数据…","正在连接中央气象台台风网");
   try{
     const data=await fetchJSONP(`${API}/list_default?year=${year}`);
     let raw=(data.typhoonList||[]).filter(t=> t[1]!=="nameless");
-    if(raw.length===0){ toast(`${year}年暂无台风数据`); clearAllTyphoons(); buildChips([]); showLoading(false); return; }
+    if(raw.length===0){ toast(`${year}年暂无台风数据`); clearAllTyphoons(); buildChips([]); showEmptyPanel(`${year}年暂无台风记录`); showLoading(false); return; }
 
     const active = raw.filter(t=>t[7]==="start");
     let chosen = active.slice();
@@ -329,6 +339,7 @@ async function loadYear(year){
       for(const t of raw){ if(chosen.length>=3) break; if(!chosen.includes(t)) chosen.push(t); }
     }
 
+    showLoading(true,"正在获取台风路径详情…",`共 ${chosen.length} 个台风`);
     // 并行拉取详情
     const details = await Promise.all(chosen.map(t=> fetchJSONP(`${API}/view_${t[0]}?id=${t[0]}`).catch(()=>null)));
     clearAllTyphoons();
@@ -344,7 +355,7 @@ async function loadYear(year){
       });
     });
 
-    if(state.typhoons.length===0){ toast("台风路径数据为空"); buildChips([]); showLoading(false); return; }
+    if(state.typhoons.length===0){ toast("台风路径数据为空"); buildChips([]); showEmptyPanel("未获取到有效的台风路径数据"); showLoading(false); return; }
 
     state.focusId = (state.typhoons.find(t=>t.active) || state.typhoons[0]).id;
     state.typhoons.forEach(buildTyphoonEntities);
@@ -358,8 +369,32 @@ async function loadYear(year){
     const activeCnt=state.typhoons.filter(t=>t.active).length;
     if(fallback) toast(`${year}年当前无活跃台风，已展示最近 ${state.typhoons.length} 个台风`);
     else toast(`已加载 ${state.typhoons.length} 个台风（活跃 ${activeCnt} 个）`);
-  }catch(e){ console.error(e); toast("加载台风数据失败"); }
+  }catch(e){
+    console.error(e);
+    toast("台风数据加载失败，请点击「重试」",true);
+    showEmptyPanel("加载失败：网络异常或数据源暂时不可用",true);
+  }
   showLoading(false);
+}
+
+/* 空态 / 错误态：在左侧面板顶部给出友好提示与重试入口 */
+function showEmptyPanel(msg,isErr){
+  clearAllTyphoons();
+  $("tyName").textContent="—"; $("tyEn").textContent="";
+  const badge=$("tyBadge"); badge.textContent="无数据"; badge.style.background="#8aa0c8"; badge.style.color="#8aa0c8";
+  ["sPres","sWind","sDir","sSpeed"].forEach(id=>{ const el=$(id); if(el) el.innerHTML="—"; });
+  $("sPos").textContent="—"; $("sTime").textContent="";
+  const box=$("ptList");
+  if(box){
+    box.innerHTML=`<div style="padding:18px 8px;text-align:center;color:var(--sub)">
+      <div class="material-symbols-outlined" style="font-size:34px;color:${isErr?'#ff6b6b':'var(--sub)'};opacity:.7">${isErr?'cloud_off':'search_off'}</div>
+      <div style="font-size:13px;margin-top:8px">${msg}</div>
+      <button id="retryBtn" class="btn" style="margin-top:12px;display:inline-flex">
+        <span class="material-symbols-outlined" style="font-size:16px">refresh</span> 重新加载</button>
+    </div>`;
+    const rb=$("retryBtn"); if(rb) rb.onclick=()=>loadYear(state.year);
+  }
+  $("ptCount").textContent="";
 }
 
 /* ================= 实体构建 ================= */
@@ -617,6 +652,27 @@ $("cloudToggle").onclick=function(){
 $("cloudSel").onchange=(e)=>{ setCloudLayer(e.target.value); if(cloudOn) toast("已切换云图数据源"); };
 $("cloudOp").oninput=(e)=>{ cloudAlpha=e.target.value/100; if(cloudLayer) cloudLayer.alpha=cloudAlpha; };
 if(cloudOn){ $("cloudToggle").classList.add("on"); $("cloudOpRow").style.opacity="1"; } else { $("cloudOpRow").style.opacity=".45"; }
+
+/* ================= 移动端面板抽屉 ================= */
+(function(){
+  const left=$("left"), right=$("rightstack"), mL=$("mobLeft"), mR=$("mobRight");
+  function setPanel(which,open){
+    if(which==="left"){ left.classList.toggle("open",open); if(open) right.classList.remove("open"); }
+    else{ right.classList.toggle("open",open); if(open) left.classList.remove("open"); }
+    if(mL) mL.classList.toggle("on",left.classList.contains("open"));
+    if(mR) mR.classList.toggle("on",right.classList.contains("open"));
+  }
+  if(mL) mL.onclick=()=>setPanel("left",!left.classList.contains("open"));
+  if(mR) mR.onclick=()=>setPanel("right",!right.classList.contains("open"));
+  document.querySelectorAll(".panel-close").forEach(btn=>{
+    btn.onclick=()=>setPanel(btn.dataset.panel,false);
+  });
+  // 点击台风 chip 后自动收起左侧抽屉（仅小屏）
+  document.addEventListener("click",(e)=>{
+    if(window.innerWidth>900) return;
+    if(e.target.closest(".ty-chip")) setPanel("left",false);
+  });
+})();
 
 /* ================= 启动 ================= */
 initYearSelector();
