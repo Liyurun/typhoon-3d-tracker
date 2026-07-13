@@ -1,0 +1,201 @@
+README.md
+  s_58bdf10115116c::t_b847a5f6e33829 13-20 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a54b08fc98419237f028bec","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[13,20]}]}]}
+.github/workflows/update-typhoon-svg.yml
+  s_58bdf10115116c::t_dfc1cafdfcf9ea 1-40 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a54b075c98419237f028be6","tool_type":"agent","tool_id":"Write","line_ranges":[{"Range":[1,40]}]}]}
+scripts/generate-typhoon-svg.js
+  s_58bdf10115116c::t_af5fd6ea3d0fde 1-149,151,160-192 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a54af89c98419237f028bbf","tool_type":"agent","tool_id":"Write","line_ranges":[{"Range":[1,149]},{"Single":151},{"Range":[160,192]}]}]}
+  s_58bdf10115116c::t_e125fd56e08d6b 150,152-159 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a54aff5c98419237f028bce","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Single":150},{"Range":[152,159]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7542403376d44ae278292816f0544699f918c078",
+  "prompts": {},
+  "sessions": {
+    "s_58bdf10115116c": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a52fe6ac98419237f028a51",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "Li Yuruan <1404020204@s.upc.edu.cn>"
+    }
+  },
+  "attestation_metadata": {
+    ".github/workflows/update-typhoon-svg.yml": [
+      {
+        "hash": "s_58bdf10115116c::t_dfc1cafdfcf9ea",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              40
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a54b075c98419237f028be6",
+            "tool_type": "agent",
+            "tool_id": "Write",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  40
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "README.md": [
+      {
+        "hash": "s_58bdf10115116c::t_b847a5f6e33829",
+        "line_ranges": [
+          {
+            "Range": [
+              13,
+              20
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a54b08fc98419237f028bec",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  13,
+                  20
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "scripts/generate-typhoon-svg.js": [
+      {
+        "hash": "s_58bdf10115116c::t_af5fd6ea3d0fde",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              149
+            ]
+          },
+          {
+            "Single": 151
+          },
+          {
+            "Range": [
+              160,
+              192
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a54af89c98419237f028bbf",
+            "tool_type": "agent",
+            "tool_id": "Write",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  149
+                ]
+              },
+              {
+                "Single": 151
+              },
+              {
+                "Range": [
+                  160,
+                  192
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hash": "s_58bdf10115116c::t_e125fd56e08d6b",
+        "line_ranges": [
+          {
+            "Single": 150
+          },
+          {
+            "Range": [
+              152,
+              159
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a54aff5c98419237f028bce",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Single": 150
+              },
+              {
+                "Range": [
+                  152,
+                  159
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_58bdf10115116c": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_58bdf10115116c::t_af5fd6ea3d0fde": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_58bdf10115116c::t_b847a5f6e33829": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_58bdf10115116c::t_dfc1cafdfcf9ea": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_58bdf10115116c::t_e125fd56e08d6b": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
