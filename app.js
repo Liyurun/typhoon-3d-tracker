@@ -328,7 +328,11 @@ function initYearSelector(){
 async function loadYear(year){
   showLoading(true,"正在加载台风数据…","正在连接中央气象台台风网");
   try{
-    const data=await fetchJSONP(`${API}/list_default?year=${year}`);
+    // 当年用 list_default（含实时活跃状态）；历史年份用 list_{year}
+    // 注意：list_default 会忽略 year 参数、恒返回当前年，故历史年份必须用 list_{year}
+    const curYear = new Date().getFullYear();
+    const listUrl = (year>=curYear) ? `${API}/list_default` : `${API}/list_${year}`;
+    const data=await fetchJSONP(listUrl);
     let raw=(data.typhoonList||[]).filter(t=> t[1]!=="nameless");
     if(raw.length===0){ toast(`${year}年暂无台风数据`); clearAllTyphoons(); buildChips([]); showEmptyPanel(`${year}年暂无台风记录`); showLoading(false); return; }
 
