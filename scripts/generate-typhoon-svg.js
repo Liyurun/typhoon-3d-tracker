@@ -20,11 +20,31 @@ const GRADE = {
 };
 const gradeInfo = (g) => GRADE[g] || { cn: g || "未知", color: "#8aa0c8" };
 
-// 地理参考标签（经度, 纬度, 名称）
+// 国家/地区参考标签（经度, 纬度, 名称）
 const GEO_LABELS = [
-  [113, 34, "中国"], [121, 24, "台湾"], [138, 37, "日本"],
-  [122, 13, "菲律宾"], [127, 37, "朝鲜半岛"], [107, 16, "越南"],
+  [103, 35, "中国"], [138, 37, "日本"], [126, 37, "韩国"],
+  [122, 14, "菲律宾"], [106, 16, "越南"], [101, 15, "泰国"],
 ];
+
+// 主要城市（经度, 纬度, 名称）——覆盖台风高影响区
+const CITIES = [
+  [116.4, 39.9, "北京"], [121.5, 31.2, "上海"], [113.3, 23.1, "广州"],
+  [114.1, 22.5, "香港"], [121.5, 25.0, "台北"], [118.8, 32.0, "南京"],
+  [120.2, 30.3, "杭州"], [117.2, 39.1, "天津"], [108.3, 22.8, "南宁"],
+  [110.3, 20.0, "海口"], [139.7, 35.7, "东京"], [126.9, 37.6, "首尔"],
+  [121.0, 14.6, "马尼拉"], [105.8, 21.0, "河内"],
+];
+
+// 加载预处理好的西太平洋海岸线/国界数据（Natural Earth，见 assets/geo）
+function loadCoastline() {
+  try {
+    const p = path.join(__dirname, "..", "assets", "geo", "coastline-wpac.json");
+    return JSON.parse(fs.readFileSync(p, "utf8"));
+  } catch (e) {
+    console.warn("海岸线数据缺失，将只画网格:", e.message);
+    return null;
+  }
+}
 
 async function fetchJSONP(url) {
   const res = await fetch(url, { headers: { "User-Agent": "typhoon-3d-tracker-bot" } });
@@ -72,7 +92,7 @@ async function main() {
     } catch (e) { /* 单个失败跳过 */ }
   }
 
-  const svg = renderSVG(typhoons, { year, noActive });
+  const svg = renderSVG(typhoons, { year, noActive, coast: loadCoastline() });
   const outDir = path.join(__dirname, "..", "assets");
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, "typhoon-latest.svg");
@@ -112,6 +132,28 @@ function renderSVG(typhoons, meta) {
   </defs>`);
   parts.push(`<rect width="${W}" height="${H}" fill="url(#bg)"/>`);
 
+  // 陆地：填充多边形 + 海岸线/国界描边（来自 Natural Earth 预处理数据）
+  if (meta.coast && meta.coast.feats) {
+    const landPaths = [];
+    for (const f of meta.coast.feats) {
+      for (const poly of f.p) {
+        for (const ring of poly) {
+          // 跳过完全在视野外的环
+          if (!ring.some(([x, y]) => x >= lonMin - 5 && x <= lonMax + 5 && y >= latMin - 5 && y <= latMax + 5)) continue;
+          const d = ring.map(([x, y], i) => `${i ? "L" : "M"}${X(x).toFixed(1)} ${Y(y).toFixed(1)}`).join(" ") + " Z";
+          landPaths.push(d);
+        }
+      }
+    }
+    if (landPaths.length) {
+      const dAll = landPaths.join(" ");
+      // 陆地填充（低饱和蓝灰，与深海背景区分）
+      parts.push(`<path d="${dAll}" fill="#16233f" fill-rule="evenodd" stroke="none"/>`);
+      // 海岸线/国界描边
+      parts.push(`<path d="${dAll}" fill="none" stroke="#3a527d" stroke-width="0.8" stroke-linejoin="round"/>`);
+    }
+  }
+
   // 经纬网格
   for (let lng = Math.ceil(lonMin / 10) * 10; lng <= lonMax; lng += 10) {
     const x = X(lng);
@@ -124,10 +166,20 @@ function renderSVG(typhoons, meta) {
     parts.push(`<text x="${pad.l - 8}" y="${(y + 4).toFixed(1)}" fill="#5f7196" font-size="11" text-anchor="end">${lat}°N</text>`);
   }
 
-  // 地理参考标签
+  // 国家/地区参考标签
   for (const [lng, lat, name] of GEO_LABELS) {
     if (lng < lonMin || lng > lonMax || lat < latMin || lat > latMax) continue;
-    parts.push(`<text x="${X(lng).toFixed(1)}" y="${Y(lat).toFixed(1)}" fill="#42557a" font-size="13" font-weight="600" text-anchor="middle">${name}</text>`);
+    parts.push(`<text x="${X(lng).toFixed(1)}" y="${Y(lat).toFixed(1)}" fill="#6076a3" font-size="14" font-weight="700" text-anchor="middle" opacity="0.7">${name}</text>`);
+  }
+
+  // 主要城市：小圆点 + 名称
+  for (const [lng, lat, name] of CITIES) {
+    if (lng < lonMin || lng > lonMax || lat < latMin || lat > latMax) continue;
+    const cx = X(lng), cy = Y(lat);
+    parts.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.4" fill="#aebedd"/>`);
+    const anchor = cx > W - 90 ? "end" : "start";
+    const tx = anchor === "end" ? cx - 5 : cx + 5;
+    parts.push(`<text x="${tx.toFixed(1)}" y="${(cy + 3.5).toFixed(1)}" fill="#8ea3c9" font-size="10.5" text-anchor="${anchor}" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">${name}</text>`);
   }
 
   // 台风路径
