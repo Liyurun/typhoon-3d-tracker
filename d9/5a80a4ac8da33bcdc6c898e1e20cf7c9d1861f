@@ -1,0 +1,66 @@
+app.js
+  s_58bdf10115116c::t_a9d85cfcbc4370 331-335 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a54ebc4c98419237f028c61","tool_type":"agent","tool_id":"Edit","line_ranges":[{"Range":[331,335]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d95a80a4ac8da33bcdc6c898e1e20cf7c9d1861f",
+  "prompts": {},
+  "sessions": {
+    "s_58bdf10115116c": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a52fe6ac98419237f028a51",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "Li Yuruan <1404020204@s.upc.edu.cn>"
+    }
+  },
+  "attestation_metadata": {
+    "app.js": [
+      {
+        "hash": "s_58bdf10115116c::t_a9d85cfcbc4370",
+        "line_ranges": [
+          {
+            "Range": [
+              331,
+              335
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a54ebc4c98419237f028c61",
+            "tool_type": "agent",
+            "tool_id": "Edit",
+            "line_ranges": [
+              {
+                "Range": [
+                  331,
+                  335
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_58bdf10115116c": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_58bdf10115116c::t_a9d85cfcbc4370": {
+      "tool": "trae",
+      "conversation_id": "6a52fe6ac98419237f028a51",
+      "session_id": "6a52fe6ac98419237f028a51",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}
