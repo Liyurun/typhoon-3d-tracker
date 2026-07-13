@@ -10,6 +10,14 @@
 
 **🌐 在线体验 → https://liyurun.github.io/typhoon-3d-tracker/**
 
+<br/>
+
+### 🛰️ 当前台风实时路径（每 3 小时自动更新）
+
+<img src="./assets/typhoon-latest.svg" alt="台风实时路径" width="100%">
+
+<sub>图片由 GitHub Action 定时抓取中央气象台数据自动生成，无需人工维护。点击上方「在线体验」查看可交互的三维版本。</sub>
+
 </div>
 
 ---
