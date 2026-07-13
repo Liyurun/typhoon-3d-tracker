@@ -81,21 +81,22 @@ const terrainProvider = new Cesium.EllipsoidTerrainProvider();
 
 /* ---------- 底图源定义（工厂函数：每次切换生成全新 provider，避免复用问题） ----------
  * labels=true 表示该底图本身没有地名/边界注记，需要叠加参考注记层。
- * 按用户要求：只保留“地形图”相关底图，去掉卫星影像 / 行政区划 / 深色底图。
- *   - topo   : Google 地形底图 (lyrs=p)，绿色地形晕渲 + 地名路网，经 CORS 验证可用；
- *   - relief : NASA GIBS ASTER GDEM 彩色晕渲地形，纯地形起伏着色（无注记），全球覆盖。 */
+ * 全部改用 NASA GIBS 源（gibs.earthdata.nasa.gov）——免 key、无 CORS 限制，
+ * 且在中国大陆可正常访问（Google/ESRI/Bing 瓦片在国内会被屏蔽导致地球发黑）。
+ *   - topo   : GIBS BlueMarble 影像地形（真彩地表 + 海底地形晕渲），全球静态覆盖；
+ *   - relief : GIBS ASTER GDEM 彩色晕渲地形，纯地形起伏着色，全球覆盖。 */
 const BASEMAP_DEFS = {
-  topo:{ label:"地形图", labels:false, make:()=>new Cesium.UrlTemplateImageryProvider({
-    url:"https://mt{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}", subdomains:["0","1","2","3"],
-    maximumLevel:19, credit:"Map data © Google" }) },
+  topo:{ label:"地形图", labels:true, make:()=>new Cesium.UrlTemplateImageryProvider({
+    url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg",
+    maximumLevel:8, credit:"NASA GIBS · Blue Marble Shaded Relief + Bathymetry" }) },
   relief:{ label:"晕渲地形", labels:true, make:()=>new Cesium.UrlTemplateImageryProvider({
     url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/ASTER_GDEM_Color_Shaded_Relief/default/GoogleMapsCompatible_Level12/{z}/{y}/{x}.jpg",
     maximumLevel:12, credit:"NASA GIBS · ASTER GDEM Color Shaded Relief" }) },
 };
-// 参考注记层（国界/地名，半透明叠加）——Google 混合注记，CORS 可用
+// 参考注记层（海岸线/国界，半透明叠加）——NASA GIBS 静态参考要素，国内可访问
 const makeLabelProvider = ()=>new Cesium.UrlTemplateImageryProvider({
-  url:"https://mt{s}.google.com/vt/lyrs=h&x={x}&y={y}&z={z}", subdomains:["0","1","2","3"],
-  maximumLevel:19, credit:"Labels © Google" });
+  url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/Reference_Features_15m/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
+  maximumLevel:9, credit:"Reference Features © NASA GIBS" });
 
 const viewer = new Cesium.Viewer("globe",{
   terrainProvider:terrainProvider,
