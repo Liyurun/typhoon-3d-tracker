@@ -231,6 +231,9 @@
 <line x1="264.6" y1="188.2" x2="265.9" y2="187.2" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="265.9" y1="187.2" x2="267.1" y2="184.2" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="267.1" y1="184.2" x2="269.7" y2="182.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="269.7" y1="182.1" x2="272.2" y2="180.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="272.2" y1="180.1" x2="273.5" y2="178.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="273.5" y1="178.1" x2="274.7" y2="177.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="780.2" cy="434.4" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="771.3" cy="429.3" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="766.3" cy="428.3" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -382,10 +385,13 @@
 <circle cx="265.9" cy="187.2" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="267.1" cy="184.2" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="269.7" cy="182.1" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="269.7" cy="182.1" r="22" fill="url(#glow)"/>
-<circle cx="269.7" cy="182.1" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="281.7" y="172.1" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2609 巴威</text>
-<text x="281.7" y="187.1" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 990hPa</text>
+<circle cx="272.2" cy="180.1" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="273.5" cy="178.1" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="274.7" cy="177.0" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="274.7" cy="177.0" r="22" fill="url(#glow)"/>
+<circle cx="274.7" cy="177.0" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="286.7" y="167.0" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2609 巴威</text>
+<text x="286.7" y="182.0" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 990hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 2 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -402,5 +408,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-14 03:20 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-14 05:53 (北京时间)</text>
 </svg>
