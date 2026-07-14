@@ -64,29 +64,6 @@
 <text x="291.1" y="401.3" fill="#8ea3c9" font-size="10.5" text-anchor="start" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">马尼拉</text>
 <circle cx="94.0" cy="332.7" r="2.4" fill="#aebedd"/>
 <text x="99.0" y="336.2" fill="#8ea3c9" font-size="10.5" text-anchor="start" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">河内</text>
-<line x1="484.5" y1="438.5" x2="482.0" y2="438.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="482.0" y1="438.5" x2="479.4" y2="437.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="479.4" y1="437.5" x2="478.2" y2="433.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="478.2" y1="433.4" x2="474.4" y2="427.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="474.4" y1="427.3" x2="468.1" y2="426.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="468.1" y1="426.3" x2="459.2" y2="421.2" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="459.2" y1="421.2" x2="463.0" y2="412.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="463.0" y1="412.1" x2="464.3" y2="410.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<line x1="464.3" y1="410.0" x2="464.3" y2="403.9" stroke="#3DB2FF" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-<circle cx="484.5" cy="438.5" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="482.0" cy="438.5" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="479.4" cy="437.5" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="478.2" cy="433.4" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="474.4" cy="427.3" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="468.1" cy="426.3" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="459.2" cy="421.2" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="463.0" cy="412.1" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="464.3" cy="410.0" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="464.3" cy="403.9" r="2.2" fill="#3DB2FF" opacity="0.85"/>
-<circle cx="464.3" cy="403.9" r="22" fill="url(#glow)"/>
-<circle cx="464.3" cy="403.9" r="6" fill="#3DB2FF" stroke="#fff" stroke-width="1.5"/>
-<text x="476.3" y="393.9" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2611 海神</text>
-<text x="476.3" y="408.9" fill="#3DB2FF" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带低压 · 13m/s · 1000hPa</text>
 <line x1="780.2" y1="434.4" x2="771.3" y2="429.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="771.3" y1="429.3" x2="766.3" y2="428.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="766.3" y1="428.3" x2="761.2" y2="427.3" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
@@ -427,7 +404,7 @@
 <text x="346.1" y="145.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2609 巴威</text>
 <text x="346.1" y="160.7" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 992hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
-<text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 2 个 · 数据:中央气象台</text>
+<text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
 <rect x="772" y="38" width="10" height="10" rx="2" fill="#3DB2FF"/>
 <text x="786" y="46" fill="#c8d3e8">热带低压</text>
@@ -442,5 +419,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-14 21:27 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-15 00:11 (北京时间)</text>
 </svg>
