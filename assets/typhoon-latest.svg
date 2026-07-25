@@ -101,6 +101,9 @@
 <line x1="230.5" y1="328.6" x2="229.2" y2="328.6" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="229.2" y1="328.6" x2="228.0" y2="327.6" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="228.0" y1="327.6" x2="226.7" y2="326.6" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="226.7" y1="326.6" x2="224.2" y2="325.6" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="224.2" y1="325.6" x2="222.9" y2="324.6" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="222.9" y1="324.6" x2="220.4" y2="323.5" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="404.9" cy="385.6" r="2.2" fill="#3DB2FF" opacity="0.85"/>
 <circle cx="393.5" cy="381.5" r="2.2" fill="#3DB2FF" opacity="0.85"/>
 <circle cx="388.4" cy="377.5" r="2.2" fill="#3DB2FF" opacity="0.85"/>
@@ -139,10 +142,13 @@
 <circle cx="229.2" cy="328.6" r="2.2" fill="#FF8C00" opacity="0.85"/>
 <circle cx="228.0" cy="327.6" r="2.2" fill="#FF8C00" opacity="0.85"/>
 <circle cx="226.7" cy="326.6" r="2.2" fill="#FF8C00" opacity="0.85"/>
-<circle cx="226.7" cy="326.6" r="22" fill="url(#glow)"/>
-<circle cx="226.7" cy="326.6" r="6" fill="#FF8C00" stroke="#fff" stroke-width="1.5"/>
-<text x="238.7" y="316.6" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2612 红霞</text>
-<text x="238.7" y="331.6" fill="#FF8C00" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">台风 · 35m/s · 970hPa</text>
+<circle cx="224.2" cy="325.6" r="2.2" fill="#FF8C00" opacity="0.85"/>
+<circle cx="222.9" cy="324.6" r="2.2" fill="#FF8C00" opacity="0.85"/>
+<circle cx="220.4" cy="323.5" r="2.2" fill="#FF8C00" opacity="0.85"/>
+<circle cx="220.4" cy="323.5" r="22" fill="url(#glow)"/>
+<circle cx="220.4" cy="323.5" r="6" fill="#FF8C00" stroke="#fff" stroke-width="1.5"/>
+<text x="232.4" y="313.5" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2612 红霞</text>
+<text x="232.4" y="328.5" fill="#FF8C00" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">台风 · 40m/s · 960hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -159,5 +165,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-25 18:25 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-07-25 21:18 (北京时间)</text>
 </svg>
