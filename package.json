@@ -1,0 +1,26 @@
+{
+  "name": "typhoon-3d-tracker",
+  "version": "1.0.0",
+  "description": "基于 CesiumJS 的三维地球台风实时追踪可视化（纯前端）。",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "node scripts/syntax-check.js"
+  },
+  "devDependencies": {
+    "jest": "29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "lib/**/*.js",
+      "scripts/generate-typhoon-svg.js"
+    ],
+    "coverageDirectory": "coverage"
+  },
+  "license": "MIT"
+}

@@ -21,32 +21,10 @@
     opacity: 0.9,      // 整体透明度（受浓度滑块控制）
   };
 
-  /* 风速色标 (m/s -> 颜色) */
-  var STOPS = [
-    [0,  [58, 92, 200]],   // 深蓝
-    [3,  [42, 160, 235]],  // 蓝
-    [7,  [26, 214, 170]],  // 青绿
-    [12, [120, 220, 60]],  // 绿
-    [17, [242, 226, 60]],  // 黄
-    [23, [250, 150, 40]],  // 橙
-    [30, [242, 60, 48]],   // 红
-    [42, [180, 30, 120]],  // 品红(极端)
-  ];
-  function speedColor(sp) {
-    if (sp <= STOPS[0][0]) return STOPS[0][1];
-    for (var i = 1; i < STOPS.length; i++) {
-      if (sp <= STOPS[i][0]) {
-        var a = STOPS[i - 1], b = STOPS[i];
-        var t = (sp - a[0]) / (b[0] - a[0]);
-        return [
-          Math.round(a[1][0] + (b[1][0] - a[1][0]) * t),
-          Math.round(a[1][1] + (b[1][1] - a[1][1]) * t),
-          Math.round(a[1][2] + (b[1][2] - a[1][2]) * t),
-        ];
-      }
-    }
-    return STOPS[STOPS.length - 1][1];
-  }
+  /* 纯函数（色标 / 插值 / U-V 换算）集中在 lib/typhoon-utils.js（全局 TyphoonUtils）。 */
+  var TU = TyphoonUtils;
+  var STOPS = TU.STOPS;            // 风速色标 (m/s -> 颜色)
+  var speedColor = TU.speedColor;
 
   /* ---------- 状态 ---------- */
   var grid = null;         // {lo1,la1,dx,dy,nx,ny,u[],v[],source,validTime,live}
@@ -83,20 +61,7 @@
 
   /* ---------- 网格插值 ---------- */
   function interp(lon, lat) {
-    if (!grid) return null;
-    var fx = (lon - grid.lo1) / grid.dx;          // 列（向东增大）
-    var fy = (grid.la1 - lat) / grid.dy;          // 行（向南增大，la1 在最北）
-    if (fx < 0 || fx > grid.nx - 1 || fy < 0 || fy > grid.ny - 1) return null;
-    var x0 = Math.floor(fx), y0 = Math.floor(fy);
-    var x1 = Math.min(x0 + 1, grid.nx - 1), y1 = Math.min(y0 + 1, grid.ny - 1);
-    var tx = fx - x0, ty = fy - y0;
-    function at(arr, x, y) { return arr[y * grid.nx + x]; }
-    function bl(arr) {
-      var a = at(arr, x0, y0), b = at(arr, x1, y0), c = at(arr, x0, y1), d = at(arr, x1, y1);
-      return (a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + d * tx) * ty;
-    }
-    var u = bl(grid.u), v = bl(grid.v);
-    return [u, v, Math.sqrt(u * u + v * v)];
+    return TU.sampleGrid(grid, lon, lat);
   }
 
   /* ---------- 粒子 ---------- */
@@ -186,9 +151,9 @@
           var cur = arr[k].current;
           var s = cur.wind_speed_10m, d = cur.wind_direction_10m;
           if (s == null || d == null) { s = 0; d = 0; }
-          var rad = d * Math.PI / 180;
-          u.push(-s * Math.sin(rad));
-          v.push(-s * Math.cos(rad));
+          var uv = TU.windUV(s, d);
+          u.push(uv[0]);
+          v.push(uv[1]);
         }
         return {
           lo1: lo1, la1: la1, dx: dx, dy: dy, nx: nx, ny: ny, u: u, v: v,
