@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://cdn.tailwindcss.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://gibs.earthdata.nasa.gov https://api.cesium.com https://assets.ion.cesium.com; connect-src 'self' https://typhoon.nmc.cn https://api.open-meteo.com https://gibs.earthdata.nasa.gov https://api.cesium.com https://assets.ion.cesium.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'" />
 <title>台风三维追踪 · Typhoon 3D Globe Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
@@ -11,6 +12,8 @@
 <script>window.CESIUM_BASE_URL = "./cesium/";</script>
 <script src="./cesium/Cesium.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- 可选本地配置（Cesium ion Token 等），未纳入版本控制；缺失时忽略 -->
+<script src="./config.js"></script>
 <style>
   :root{
     --bg:#040711; --panel:rgba(14,21,40,.72); --border:rgba(120,160,240,.18);

@@ -50,6 +50,8 @@ function nrtTime(lagMin){
 function ymd(offsetDays){ const d=new Date(Date.now()+offsetDays*86400000); return d.toISOString().slice(0,10); }
 
 const $=(id)=>document.getElementById(id);
+/* 远端接口返回的数据在写入 innerHTML 前必须转义，避免 DOM XSS */
+function esc(v){ return String(v==null?"":v).replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function toast(msg,isErr){ const t=$("toast"); t.textContent=msg; t.classList.toggle("err",!!isErr); t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),isErr?4200:2800); }
 function showLoading(b,msg,sub){
   const el=$("loading"); if(!el) return;
@@ -73,8 +75,13 @@ setInterval(tickClock,1000); tickClock();
  *      则优雅回退到椭球地形(平滑球面)，不会崩溃。
  * ================================================================= */
 
-// Cesium ion Access Token（用户提供）—— 必须在创建 Viewer 之前设置
-Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5OGQyOTU3Yy04ZTkyLTQ0MjMtOGE1Yi0yMDljNWRiNGVjMGIiLCJpZCI6NDU1MTI3LCJzdWIiOiJMaXl1cnVuIiwiaXNzIjoiaHR0cHM6Ly9hcGkuY2VzaXVtLmNvbSIsImF1ZCI6ImxpeXJ1biIsImlhdCI6MTc4Mzc0MjA0OH0.jJ6uP6cJnmGEwqro1oCdkOuIw_kKZd903EdR39vCgoY";
+/* Cesium ion Access Token —— 必须在创建 Viewer 之前设置。
+ * 不在仓库中硬编码：从 config.js（未纳入版本控制，见 config.example.js）
+ * 或页面中的 <meta name="cesium-ion-token"> 读取。缺失时自动降级为椭球地形。 */
+const ionToken = (window.CESIUM_ION_TOKEN
+  || document.querySelector('meta[name="cesium-ion-token"]')?.content
+  || "").trim();
+if(ionToken) Cesium.Ion.defaultAccessToken = ionToken;
 
 // 初始使用椭球地形（同步创建 Viewer 所需）；随后异步替换为 Cesium World Terrain。
 const terrainProvider = new Cesium.EllipsoidTerrainProvider();
@@ -190,6 +197,10 @@ try{
 }catch(e){ console.warn("verticalExaggeration 设置失败", e); }
 
 (async function loadWorldTerrain(){
+  if(!ionToken){
+    console.info("[terrain] 未配置 Cesium ion Token，使用椭球地形（见 config.example.js）");
+    return;
+  }
   try{
     const cwt = await Cesium.CesiumTerrainProvider.fromIonAssetId(1, { requestVertexNormals:true });
     viewer.terrainProvider = cwt;
@@ -393,7 +404,7 @@ function showEmptyPanel(msg,isErr){
   if(box){
     box.innerHTML=`<div style="padding:18px 8px;text-align:center;color:var(--sub)">
       <div class="material-symbols-outlined" style="font-size:34px;color:${isErr?'#ff6b6b':'var(--sub)'};opacity:.7">${isErr?'cloud_off':'search_off'}</div>
-      <div style="font-size:13px;margin-top:8px">${msg}</div>
+      <div style="font-size:13px;margin-top:8px">${esc(msg)}</div>
       <button id="retryBtn" class="btn" style="margin-top:12px;display:inline-flex">
         <span class="material-symbols-outlined" style="font-size:16px">refresh</span> 重新加载</button>
     </div>`;
@@ -436,7 +447,7 @@ function buildTyphoonEntities(ty){
         outlineColor:Cesium.Color.WHITE.withAlpha(.85), outlineWidth:1.2,
         disableDepthTestDistance:Number.POSITIVE_INFINITY },
       properties:{ ty:ty.id, kind:"pt", idx:i,
-        info:`<b>${ty.num} ${ty.cn}</b> · <b>${fmtTime(p.time)}</b><br/>等级：${g.cn}<br/>气压：${p.pres} hPa　风速：${p.wind} m/s<br/>移动：${dirCn(p.dir)} ${p.speed!=null?p.speed+" km/h":""}<br/>位置：${p.lat}°N, ${p.lng}°E` } });
+        info:`<b>${esc(ty.num)} ${esc(ty.cn)}</b> · <b>${esc(fmtTime(p.time))}</b><br/>等级：${esc(g.cn)}<br/>气压：${esc(p.pres)} hPa　风速：${esc(p.wind)} m/s<br/>移动：${esc(dirCn(p.dir))} ${p.speed!=null?esc(p.speed)+" km/h":""}<br/>位置：${esc(p.lat)}°N, ${esc(p.lng)}°E` } });
     e.pts.push(pt);
   });
 
@@ -459,7 +470,7 @@ function buildTyphoonEntities(ty){
       alignedAxis:Cesium.Cartesian3.ZERO,
       disableDepthTestDistance:Number.POSITIVE_INFINITY },
     properties:{ ty:ty.id, kind:"arrow",
-      info:new Cesium.CallbackProperty(()=>{ const p=curPt(ty); return `移动方向：${dirCn(p.dir)}　速度：${p.speed!=null?p.speed+" km/h":"—"}`; },false) } });
+      info:new Cesium.CallbackProperty(()=>{ const p=curPt(ty); return `移动方向：${esc(dirCn(p.dir))}　速度：${p.speed!=null?esc(p.speed)+" km/h":"—"}`; },false) } });
 
   // 台风眼（旋转旋臂）
   e.eye = viewer.entities.add({ position:posCB,
@@ -468,7 +479,7 @@ function buildTyphoonEntities(ty){
       disableDepthTestDistance:Number.POSITIVE_INFINITY },
     properties:{ ty:ty.id, kind:"eye",
       info:new Cesium.CallbackProperty(()=>{ const p=curPt(ty); const g=gradeInfo(p.grade);
-        return `<b>${ty.num} ${ty.cn}</b>${ty.active?" · 活跃":""}<br/>等级：${g.cn}　气压：${p.pres} hPa<br/>风速：${p.wind} m/s　移动：${dirCn(p.dir)}`; },false) } });
+        return `<b>${esc(ty.num)} ${esc(ty.cn)}</b>${ty.active?" · 活跃":""}<br/>等级：${esc(g.cn)}　气压：${esc(p.pres)} hPa<br/>风速：${esc(p.wind)} m/s　移动：${esc(dirCn(p.dir))}`; },false) } });
 
   // 名称标签
   e.label = viewer.entities.add({ position:posCB,
@@ -500,7 +511,7 @@ function drawForecast(){
     fcEnts.push(viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(f[2],f[3]),
       point:{ pixelSize:5, color:Cesium.Color.fromCssColorString(g.color),
         outlineColor:Cesium.Color.WHITE, outlineWidth:1, disableDepthTestDistance:Number.POSITIVE_INFINITY },
-      properties:{ kind:"fc", info:`<b>${ty.num} ${ty.cn} · +${f[0]}h 预报</b><br/>等级：${g.cn}<br/>气压：${f[4]} hPa　风速：${f[5]} m/s<br/>位置：${f[3]}°N, ${f[2]}°E` } }));
+      properties:{ kind:"fc", info:`<b>${esc(ty.num)} ${esc(ty.cn)} · +${esc(f[0])}h 预报</b><br/>等级：${esc(g.cn)}<br/>气压：${esc(f[4])} hPa　风速：${esc(f[5])} m/s<br/>位置：${esc(f[3])}°N, ${esc(f[2])}°E` } }));
   });
   const arr=[]; path.forEach(c=>arr.push(c[0],c[1]));
   fcEnts.push(viewer.entities.add({ polyline:{ positions:Cesium.Cartesian3.fromDegreesArray(arr),
@@ -527,10 +538,10 @@ function updatePanel(){
   $("tyName").textContent=`${ty.num||""} ${ty.cn}`;
   $("tyEn").textContent=`${ty.en}${ty.meaning?" · "+ty.meaning:""}`;
   const badge=$("tyBadge"); badge.textContent=g.cn; badge.style.background=g.color; badge.style.color=g.color;
-  $("sPres").innerHTML=`${p.pres}<span class="u"> hPa</span>`;
-  $("sWind").innerHTML=`${p.wind}<span class="u"> m/s</span>`;
-  $("sDir").innerHTML=`${dirCn(p.dir)}${dirDeg(p.dir)!=null?` <span class="u">(${dirDeg(p.dir)}°)</span>`:""}`;
-  $("sSpeed").innerHTML=`${p.speed!=null?p.speed:"—"}<span class="u"> km/h</span>`;
+  $("sPres").innerHTML=`${esc(p.pres)}<span class="u"> hPa</span>`;
+  $("sWind").innerHTML=`${esc(p.wind)}<span class="u"> m/s</span>`;
+  $("sDir").innerHTML=`${esc(dirCn(p.dir))}${dirDeg(p.dir)!=null?` <span class="u">(${esc(dirDeg(p.dir))}°)</span>`:""}`;
+  $("sSpeed").innerHTML=`${p.speed!=null?esc(p.speed):"—"}<span class="u"> km/h</span>`;
   $("sPos").textContent=`${p.lat}°N, ${p.lng}°E`;
   $("sTime").textContent=`观测：${fmtTime(p.time)}`+(ty.cursor===ty.points.length-1?"（最新）":"");
   $("tlLabel").textContent=`${fmtTime(p.time)} · ${g.cn}`;
@@ -542,17 +553,17 @@ function buildPointList(ty){
   const box=$("ptList"); box.innerHTML=""; const pts=ty.points; $("ptCount").textContent=`共 ${pts.length} 点`;
   for(let i=pts.length-1;i>=0;i--){ const p=pts[i],g=gradeInfo(p.grade);
     const row=document.createElement("div"); row.className="pt-row"; row.dataset.idx=i;
-    row.innerHTML=`<span class="dot" style="background:${g.color};color:${g.color}"></span>
-      <span style="width:78px;color:var(--sub)" class="mono">${fmtTime(p.time)}</span>
-      <span style="width:58px">${g.cn}</span>
-      <span style="color:var(--sub)">${p.pres}hPa · ${p.wind}m/s</span>`;
+    row.innerHTML=`<span class="dot" style="background:${esc(g.color)};color:${esc(g.color)}"></span>
+      <span style="width:78px;color:var(--sub)" class="mono">${esc(fmtTime(p.time))}</span>
+      <span style="width:58px">${esc(g.cn)}</span>
+      <span style="color:var(--sub)">${esc(p.pres)}hPa · ${esc(p.wind)}m/s</span>`;
     row.onclick=()=>{ ty.cursor=i; updatePanel(); }; box.appendChild(row); }
   highlightPointRow(ty);
 }
 function highlightPointRow(ty){ document.querySelectorAll(".pt-row").forEach(r=>{ r.style.background=(+r.dataset.idx===ty.cursor)?"rgba(63,208,255,.16)":""; }); }
 function buildLegend(){ const box=$("legendBody"); box.innerHTML="";
   Object.values(GRADE).forEach(g=>{ const row=document.createElement("div"); row.className="legend-row";
-    row.innerHTML=`<span class="sw" style="background:${g.color}"></span>${g.cn}`; box.appendChild(row); }); }
+    row.innerHTML=`<span class="sw" style="background:${esc(g.color)}"></span>${esc(g.cn)}`; box.appendChild(row); }); }
 
 /* 台风选择 chips */
 function buildChips(list){
@@ -560,8 +571,8 @@ function buildChips(list){
   if(!list.length){ box.innerHTML=`<div style="font-size:12px;color:var(--sub);padding:6px 2px">暂无台风</div>`; return; }
   list.forEach(ty=>{ const p=curPt(ty), g=gradeInfo(p.grade);
     const chip=document.createElement("div"); chip.className="ty-chip"; chip.dataset.id=ty.id;
-    chip.innerHTML=`<span class="dot" style="background:${g.color};color:${g.color}"></span>
-      <span style="flex:1"><b>${ty.num}</b> ${ty.cn}</span>
+    chip.innerHTML=`<span class="dot" style="background:${esc(g.color)};color:${esc(g.color)}"></span>
+      <span style="flex:1"><b>${esc(ty.num)}</b> ${esc(ty.cn)}</span>
       ${ty.active?`<span class="live">活跃</span>`:""}`;
     chip.onclick=()=>focusTyphoon(ty.id,true);
     box.appendChild(chip);
