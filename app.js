@@ -35,9 +35,11 @@ const dirDeg = (d)=> (DIR[d] ? DIR[d].deg : null);
 function fmtTime(str){ if(!str||str.length<12) return str||""; return `${str.slice(4,6)}-${str.slice(6,8)} ${str.slice(8,10)}:${str.slice(10,12)}`; }
 
 async function fetchJSONP(url){
-  const res=await fetch(url,{cache:"no-store"}); const text=await res.text();
+  const res=await fetch(url,{cache:"no-store"});
+  if(!res.ok) throw new Error(`请求失败 HTTP ${res.status} ${res.statusText||""} (${url})`);
+  const text=await res.text();
   const s=text.indexOf("{"),e=text.lastIndexOf("}");
-  if(s<0||e<0) throw new Error("返回格式异常");
+  if(s<0||e<0) throw new Error(`返回格式异常 (${url})`);
   return JSON.parse(text.substring(s,e+1));
 }
 
@@ -161,7 +163,7 @@ scene.skyBox = new Cesium.SkyBox({
 // HDR + 抗锯齿 + 轻微泛光（太阳/高光辉光）
 try{
   if(scene.highDynamicRangeSupported){ scene.highDynamicRange = true; }
-}catch(e){ scene.highDynamicRange = false; }
+}catch(e){ scene.highDynamicRange = false; console.warn("HDR 不可用，已关闭高动态范围", e); }
 if(scene.postProcessStages && scene.postProcessStages.fxaa) scene.postProcessStages.fxaa.enabled = true;
 try{
   const bloom = scene.postProcessStages.bloom;
@@ -198,7 +200,8 @@ try{
     if(typeof toast === "function") toast("已启用真实三维地形（Cesium World Terrain）");
   }catch(err){
     console.warn("[terrain] Cesium World Terrain 加载失败，回退椭球地形：", err);
-    try{ viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider(); }catch(e){}
+    try{ viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider(); }
+    catch(e){ console.error("[terrain] 椭球地形回退也失败：", e); }
     if(typeof toast === "function") toast("三维地形不可用，已回退平滑球面地形");
   }
 })();
@@ -346,7 +349,8 @@ async function loadYear(year){
 
     showLoading(true,"正在获取台风路径详情…",`共 ${chosen.length} 个台风`);
     // 并行拉取详情
-    const details = await Promise.all(chosen.map(t=> fetchJSONP(`${API}/view_${t[0]}?id=${t[0]}`).catch(()=>null)));
+    const details = await Promise.all(chosen.map(t=> fetchJSONP(`${API}/view_${t[0]}?id=${t[0]}`)
+      .catch(err=>{ console.warn(`[typhoon] 台风 ${t[0]}(${t[2]||"?"}) 路径详情加载失败，已跳过：`, err); return null; })));
     clearAllTyphoons();
     state.typhoons = [];
     chosen.forEach((meta,i)=>{
@@ -704,5 +708,5 @@ loadYear(state.year);
         });
       }, 1500);
     }
-  }catch(e){}
+  }catch(e){ console.warn("解析 URL 参数失败，已忽略自定义视角/底图：", e); }
 })();
