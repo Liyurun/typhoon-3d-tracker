@@ -48,6 +48,7 @@ function loadCoastline() {
 
 async function fetchJSONP(url) {
   const res = await fetch(url, { headers: { "User-Agent": "typhoon-3d-tracker-bot" } });
+  if (!res.ok) throw new Error(`请求失败 HTTP ${res.status} ${res.statusText || ""}: ${url}`);
   const text = await res.text();
   const s = text.indexOf("{"), e = text.lastIndexOf("}");
   if (s < 0 || e < 0) throw new Error("返回格式异常: " + url);
@@ -78,18 +79,26 @@ async function main() {
   }
 
   const typhoons = [];
+  const failed = [];
   for (const meta of chosen) {
     try {
       const d = (await fetchJSONP(`${API}/view_${meta[0]}?id=${meta[0]}`)).typhoon;
-      if (!d || !d[8]) continue;
+      if (!d || !d[8]) { console.warn(`台风 ${meta[0]}(${meta[2] || "?"}) 无路径数据，已跳过`); continue; }
       const pts = d[8].map((p) => ({ grade: p[3], lng: p[4], lat: p[5], pres: p[6], wind: p[7] }))
         .filter((p) => typeof p.lng === "number" && typeof p.lat === "number");
-      if (!pts.length) continue;
+      if (!pts.length) { console.warn(`台风 ${meta[0]}(${meta[2] || "?"}) 路径点为空，已跳过`); continue; }
       typhoons.push({
         num: meta[3], cn: d[2] || meta[2], en: d[1] || "",
         active: meta[7] === "start", pts,
       });
-    } catch (e) { /* 单个失败跳过 */ }
+    } catch (e) {
+      failed.push(meta[0]);
+      console.warn(`台风 ${meta[0]}(${meta[2] || "?"}) 详情获取失败，已跳过:`, e.message);
+    }
+  }
+  // 若所有选中的台风详情均获取失败，视为硬错误（避免静默生成空图、掩盖上游故障）
+  if (chosen.length && !typhoons.length) {
+    throw new Error(`所有台风详情获取失败（共 ${chosen.length} 个，失败 ${failed.length} 个）`);
   }
 
   const svg = renderSVG(typhoons, { year, noActive, coast: loadCoastline() });

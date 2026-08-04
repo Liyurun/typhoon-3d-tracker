@@ -199,7 +199,10 @@
   }
   function loadSample() {
     return fetch("./wind-sample.json", { cache: "no-store" })
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error("wind-sample.json HTTP " + r.status);
+        return r.json();
+      })
       .then(function (j) { j.live = false; return j; });
   }
   function loadWind() {
