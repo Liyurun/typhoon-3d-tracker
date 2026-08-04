@@ -53,7 +53,9 @@
 .
 ├── index.html        # 页面入口（UI 布局、样式、面板）
 ├── app.js            # 核心逻辑：台风数据拉取/解析、Cesium 地球、图层切换、交互
+├── typhoon-common.js # 前端与 SVG 生成脚本共用的常量/接口/解析工具
 ├── wind-layer.js     # 动态风场粒子引擎（Canvas 叠加层）
+├── scripts/          # Node 脚本（GitHub Action 生成 README 台风路径 SVG）
 ├── wind-sample.json  # 风场接口失败时的内置回退样例数据
 ├── cesium/           # 本地打包的 CesiumJS 1.121 库（离线可用）
 ├── .nojekyll         # 告知 GitHub Pages 跳过 Jekyll 处理
