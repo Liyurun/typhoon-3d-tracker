@@ -87,19 +87,21 @@ npx serve .        # 或 npx http-server -p 8080
 
 ## 🔑 替换 Cesium Ion Token（三维地形）
 
-项目在 `app.js` 顶部内置了一个 Cesium Ion 免费 Token 用于加载三维地形。**建议替换为你自己的，并限制使用域名**：
+仓库中**不包含任何 Token**（避免配额被盗用）。未配置时地球一切正常，仅地形降级为平滑球面。启用真实三维地形：
 
-1. 到 https://cesium.com/ion 免费注册；
-2. 复制默认 Access Token；
-3. 打开 `app.js`，找到 `Cesium.Ion.defaultAccessToken = "..."`，替换为你的 Token；
-4. 在 Cesium Ion 控制台的 Token 设置里，将 **Allowed URLs** 限制为你的 Pages 域名，防止配额被他人盗用。
+1. 到 https://cesium.com/ion 免费注册，复制默认 Access Token；
+2. `cp config.example.js config.js`，把 Token 填入 `window.CESIUM_ION_TOKEN`（`config.js` 已被 `.gitignore` 忽略）；
+3. 或者不用 `config.js`，在 `index.html` 的 `<head>` 中加入 `<meta name="cesium-ion-token" content="你的Token" />`；
+4. 在 Cesium Ion 控制台的 Token 设置里，把 **Allowed URLs** 限制为你的 Pages 域名。
+
+> 前端 Token 在浏览器中始终可见，**必须**依靠 Allowed URLs 域名限制来保护配额。
 
 > Ion 免费套餐含全球地形，个人使用足够；超出每月配额时页面会自动降级为平滑球面，不会白屏。
 
 ## ⚠️ 已知注意事项
 
 - **网络可达性**：部分底图源（Google、ESRI、Bing）在中国大陆可能被屏蔽或很慢，导致地球表面显示为黑色。建议默认使用 NASA GIBS / CartoDB 等在国内可访问的源。
-- **地形 Token**：示例 Token 有流量配额，正式使用请替换为自己的。
+- **地形 Token**：仓库不含 Token，需按上一节自行配置，否则地形为平滑球面。
 - **Open-Meteo 限流**：风场接口偶发 429 限流，此时自动回退到 `wind-sample.json` 样例数据。
 
 ## 🙏 致谢
