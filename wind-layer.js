@@ -7,6 +7,7 @@
  * U/V 换算 : U = -speed*sin(dir),  V = -speed*cos(dir)  （气象风向：风的来向）
  * 颜色编码 : 蓝→青→绿→黄→橙→红 表示风速 (m/s)。
  * 依赖全局 : viewer, Cesium, $, toast（均由 app.js 在同页面先行声明）
+ *            TyphoonCommon（共享工具，typhoon-common.js）
  * ==================================================================== */
 (function () {
   "use strict";
@@ -214,7 +215,7 @@
       });
   }
   function onLoaded() {
-    var t = grid.validTime ? grid.validTime.replace("T", " ").replace("Z", " UTC") : "";
+    var t = grid.validTime ? TyphoonCommon.formatUtcStamp(grid.validTime) : "";
     setStatus((grid.live ? "实时" : "样例") + " · " + t, grid.live ? "live" : "sample");
     if (typeof toast === "function") toast(grid.live ? "已加载实时风场（Open-Meteo）" : "实时风场不可用，已用内置样例");
   }
@@ -226,16 +227,14 @@
     el.style.color = cls === "err" ? "#ff6b6b" : (cls === "live" ? "#00e08a" : "var(--sub)");
   }
   function bindUI() {
-    var tgl = document.getElementById("windToggle");
-    var opRow = document.getElementById("windOpRow");
-    tgl.onclick = function () {
-      enabled = !enabled;
-      this.classList.toggle("on", enabled);
+    // 默认关闭（风场覆盖层会遮挡地形，首屏不显示）
+    TyphoonCommon.bindOverlayToggle("windToggle", "windOpRow", enabled, function (on) {
+      enabled = on;
       canvas.style.display = enabled ? "block" : "none";
       if (!enabled && g) g.clearRect(0, 0, W, H);
-      opRow.style.opacity = enabled ? "1" : ".45";
       if (typeof toast === "function") toast(enabled ? "已开启动态风场" : "已关闭动态风场");
-    };
+    });
+    canvas.style.display = enabled ? "block" : "none";
     document.getElementById("windOp").oninput = function (e) {
       CFG.opacity = Math.max(0.15, e.target.value / 100);
     };
@@ -243,10 +242,6 @@
       CFG.particles = +e.target.value;
       if (grid) seedParticles();
     };
-    // 默认关闭（风场覆盖层会遮挡地形，首屏不显示）
-    tgl.classList.remove("on");
-    canvas.style.display = "none";
-    opRow.style.opacity = ".45";
     // 颜色图例渐变
     var grad = document.getElementById("windLegendBar");
     if (grad) {

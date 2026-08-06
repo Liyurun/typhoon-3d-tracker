@@ -7,18 +7,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const API = "https://typhoon.nmc.cn/weatherservice/typhoon/jsons";
+// 与网站前端共用的接口地址、分级配色与数据解析
+const {
+  GRADE, gradeInfo, listUrl, viewUrl, fetchNmcJson,
+  namedTyphoons, selectTyphoons, parseTrackPoints, typhoonInfo,
+} = require("../typhoon-common.js");
 
-// 强度分级配色（与网站前端保持一致）
-const GRADE = {
-  TD:      { cn: "热带低压",   color: "#3DB2FF" },
-  TS:      { cn: "热带风暴",   color: "#00D084" },
-  STS:     { cn: "强热带风暴", color: "#FFD500" },
-  TY:      { cn: "台风",       color: "#FF8C00" },
-  STY:     { cn: "强台风",     color: "#FF3B30" },
-  SuperTY: { cn: "超强台风",   color: "#C724B1" },
-};
-const gradeInfo = (g) => GRADE[g] || { cn: g || "未知", color: "#8aa0c8" };
+const UA = { headers: { "User-Agent": "typhoon-3d-tracker-bot" } };
 
 // 国家/地区参考标签（经度, 纬度, 名称）
 const GEO_LABELS = [
@@ -46,53 +41,41 @@ function loadCoastline() {
   }
 }
 
-async function fetchJSONP(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "typhoon-3d-tracker-bot" } });
-  const text = await res.text();
-  const s = text.indexOf("{"), e = text.lastIndexOf("}");
-  if (s < 0 || e < 0) throw new Error("返回格式异常: " + url);
-  return JSON.parse(text.substring(s, e + 1));
-}
-
 function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// 带描边光晕的文字（深色底图上保证可读性）
+function haloText(x, y, txt, o) {
+  return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" fill="${o.fill}" font-size="${o.size}"` +
+    (o.weight ? ` font-weight="${o.weight}"` : "") +
+    ` text-anchor="${o.anchor}" paint-order="stroke" stroke="${o.halo}" stroke-width="${o.haloWidth}">${esc(txt)}</text>`;
 }
 
 async function main() {
   const year = new Date().getUTCFullYear();
   let list;
   try {
-    list = await fetchJSONP(`${API}/list_default?year=${year}`);
+    list = await fetchNmcJson(listUrl(year), UA);
   } catch (e) {
     console.error("列表获取失败:", e.message);
     process.exit(1);
   }
 
-  let raw = (list.typhoonList || []).filter((t) => t[1] !== "nameless");
-  const active = raw.filter((t) => t[7] === "start");
-  // 优先展示活跃台风；若无活跃台风则展示最近的最多 3 个
-  let chosen = active.slice();
-  const noActive = chosen.length === 0;
-  if (chosen.length === 0) {
-    chosen = raw.slice(0, 3);
-  }
+  const { chosen } = selectTyphoons(namedTyphoons(list));
 
   const typhoons = [];
   for (const meta of chosen) {
     try {
-      const d = (await fetchJSONP(`${API}/view_${meta[0]}?id=${meta[0]}`)).typhoon;
-      if (!d || !d[8]) continue;
-      const pts = d[8].map((p) => ({ grade: p[3], lng: p[4], lat: p[5], pres: p[6], wind: p[7] }))
-        .filter((p) => typeof p.lng === "number" && typeof p.lat === "number");
+      const d = (await fetchNmcJson(viewUrl(meta[0]), UA)).typhoon;
+      if (!d) continue;
+      const pts = parseTrackPoints(d);
       if (!pts.length) continue;
-      typhoons.push({
-        num: meta[3], cn: d[2] || meta[2], en: d[1] || "",
-        active: meta[7] === "start", pts,
-      });
+      typhoons.push(Object.assign(typhoonInfo(meta, d), { pts }));
     } catch (e) { /* 单个失败跳过 */ }
   }
 
-  const svg = renderSVG(typhoons, { year, noActive, coast: loadCoastline() });
+  const svg = renderSVG(typhoons, { year, coast: loadCoastline() });
   const outDir = path.join(__dirname, "..", "assets");
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, "typhoon-latest.svg");
@@ -179,7 +162,7 @@ function renderSVG(typhoons, meta) {
     parts.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.4" fill="#aebedd"/>`);
     const anchor = cx > W - 90 ? "end" : "start";
     const tx = anchor === "end" ? cx - 5 : cx + 5;
-    parts.push(`<text x="${tx.toFixed(1)}" y="${(cy + 3.5).toFixed(1)}" fill="#8ea3c9" font-size="10.5" text-anchor="${anchor}" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">${name}</text>`);
+    parts.push(haloText(tx, cy + 3.5, name, { fill: "#8ea3c9", size: 10.5, anchor, halo: "#0a1330", haloWidth: 2.5 }));
   }
 
   // 台风路径
@@ -207,23 +190,21 @@ function renderSVG(typhoons, meta) {
     const anchor = flipX ? "end" : "start";
     const lx = flipX ? cx - 12 : cx + 12;
     const ty = flipY ? cy + 22 : cy - 10;
-    parts.push(`<text x="${lx.toFixed(1)}" y="${ty.toFixed(1)}" fill="#fff" font-size="13" font-weight="700" text-anchor="${anchor}" paint-order="stroke" stroke="#050912" stroke-width="3">${esc(label)}</text>`);
-    parts.push(`<text x="${lx.toFixed(1)}" y="${(ty + 15).toFixed(1)}" fill="${g.color}" font-size="11" font-weight="600" text-anchor="${anchor}" paint-order="stroke" stroke="#050912" stroke-width="3">${esc(info)}</text>`);
+    parts.push(haloText(lx, ty, label, { fill: "#fff", size: 13, weight: 700, anchor, halo: "#050912", haloWidth: 3 }));
+    parts.push(haloText(lx, ty + 15, info, { fill: g.color, size: 11, weight: 600, anchor, halo: "#050912", haloWidth: 3 }));
   }
 
   // 标题
   parts.push(`<text x="${pad.l}" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>`);
-  const subtitle = meta.noActive
+  const activeCnt = typhoons.filter((t) => t.active).length;
+  const subtitle = activeCnt === 0
     ? `${meta.year}年当前无活跃台风，展示最近 ${typhoons.length} 个`
-    : `当前活跃台风 ${typhoons.length} 个`;
+    : `当前活跃台风 ${activeCnt} 个` + (typhoons.length > activeCnt ? `，另展示最近 ${typhoons.length - activeCnt} 个` : "");
   parts.push(`<text x="${pad.l}" y="45" fill="#8aa0c8" font-size="12">${esc(subtitle)} · 数据:中央气象台</text>`);
 
   // 图例（右上角）
   const grades = Object.values(GRADE);
-  let lx = W - pad.r, ly = 20;
   parts.push(`<g font-size="10.5">`);
-  const legendItems = grades.map((g) => g.cn);
-  // 从右往左排一行不够，改为右上角竖排小图例
   grades.forEach((g, i) => {
     const yy = 46 + i * 15;
     parts.push(`<rect x="${W - 128}" y="${yy - 8}" width="10" height="10" rx="2" fill="${g.color}"/>`);

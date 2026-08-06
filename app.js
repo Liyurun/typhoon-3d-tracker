@@ -10,17 +10,10 @@
  * 坐标     : WGS-84，经纬度直接使用。
  * ======================================================================= */
 
-const API = "https://typhoon.nmc.cn/weatherservice/typhoon/jsons";
-
-const GRADE = {
-  TD:      { cn:"热带低压",   color:"#3DB2FF" },
-  TS:      { cn:"热带风暴",   color:"#00D084" },
-  STS:     { cn:"强热带风暴", color:"#FFD500" },
-  TY:      { cn:"台风",       color:"#FF8C00" },
-  STY:     { cn:"强台风",     color:"#FF3B30" },
-  SuperTY: { cn:"超强台风",   color:"#C724B1" },
-};
-const gradeInfo = (g)=>GRADE[g]||{cn:g||"未知",color:"#8aa0c8"};
+/* 接口地址、强度分级配色、数据解析等与 README SVG 脚本共用（typhoon-common.js） */
+const { GRADE, gradeInfo, listUrl, viewUrl, fetchNmcJson, namedTyphoons,
+        selectTyphoons, parseTrackPoints, typhoonInfo, formatUtcStamp,
+        bindOverlayToggle } = TyphoonCommon;
 
 /* 风向 / 移动方向：英文 -> 中文 + 罗盘方位角(度, 顺时针自北) */
 const DIR = {
@@ -34,12 +27,7 @@ const dirDeg = (d)=> (DIR[d] ? DIR[d].deg : null);
 
 function fmtTime(str){ if(!str||str.length<12) return str||""; return `${str.slice(4,6)}-${str.slice(6,8)} ${str.slice(8,10)}:${str.slice(10,12)}`; }
 
-async function fetchJSONP(url){
-  const res=await fetch(url,{cache:"no-store"}); const text=await res.text();
-  const s=text.indexOf("{"),e=text.lastIndexOf("}");
-  if(s<0||e<0) throw new Error("返回格式异常");
-  return JSON.parse(text.substring(s,e+1));
-}
+const fetchTyphoonJson = (url)=>fetchNmcJson(url,{cache:"no-store"});
 
 /* 近实时时间戳(向前取整到10分钟, 减去 lag 分钟) -> YYYY-MM-DDTHH:mm:00Z */
 function nrtTime(lagMin){
@@ -85,18 +73,23 @@ const terrainProvider = new Cesium.EllipsoidTerrainProvider();
  * 且在中国大陆可正常访问（Google/ESRI/Bing 瓦片在国内会被屏蔽导致地球发黑）。
  *   - topo   : GIBS BlueMarble 影像地形（真彩地表 + 海底地形晕渲），全球静态覆盖；
  *   - relief : GIBS ASTER GDEM 彩色晕渲地形，纯地形起伏着色，全球覆盖。 */
+/* GIBS 静态瓦片源（统一 URL 模板：图层名 / 瓦片矩阵集 / 扩展名） */
+const gibsTiles = (layer,tms,ext,maximumLevel,credit)=>new Cesium.UrlTemplateImageryProvider({
+  url:`https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${layer}/default/${tms}/{z}/{y}/{x}.${ext}`,
+  maximumLevel, credit });
+
 const BASEMAP_DEFS = {
-  topo:{ label:"地形图", labels:true, make:()=>new Cesium.UrlTemplateImageryProvider({
-    url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg",
-    maximumLevel:8, credit:"NASA GIBS · Blue Marble Shaded Relief + Bathymetry" }) },
-  relief:{ label:"晕渲地形", labels:true, make:()=>new Cesium.UrlTemplateImageryProvider({
-    url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/ASTER_GDEM_Color_Shaded_Relief/default/GoogleMapsCompatible_Level12/{z}/{y}/{x}.jpg",
-    maximumLevel:12, credit:"NASA GIBS · ASTER GDEM Color Shaded Relief" }) },
+  topo:{ label:"地形图", labels:true, make:()=>gibsTiles(
+    "BlueMarble_ShadedRelief_Bathymetry","GoogleMapsCompatible_Level8","jpeg",8,
+    "NASA GIBS · Blue Marble Shaded Relief + Bathymetry") },
+  relief:{ label:"晕渲地形", labels:true, make:()=>gibsTiles(
+    "ASTER_GDEM_Color_Shaded_Relief","GoogleMapsCompatible_Level12","jpg",12,
+    "NASA GIBS · ASTER GDEM Color Shaded Relief") },
 };
 // 参考注记层（海岸线/国界，半透明叠加）——NASA GIBS 静态参考要素，国内可访问
-const makeLabelProvider = ()=>new Cesium.UrlTemplateImageryProvider({
-  url:"https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/Reference_Features_15m/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
-  maximumLevel:9, credit:"Reference Features © NASA GIBS" });
+const makeLabelProvider = ()=>gibsTiles(
+  "Reference_Features_15m","GoogleMapsCompatible_Level9","png",9,
+  "Reference Features © NASA GIBS");
 
 const viewer = new Cesium.Viewer("globe",{
   terrainProvider:terrainProvider,
@@ -276,7 +269,7 @@ function setCloudLayer(kind){
   });
   cloudLayer=viewer.imageryLayers.addImageryProvider(prov);
   cloudLayer.alpha=cloudAlpha; cloudLayer.show=cloudOn;
-  const t=c.time.includes("T") ? c.time.replace("T"," ").replace("Z"," UTC") : c.time+" (全天合成)";
+  const t=c.time.includes("T") ? formatUtcStamp(c.time) : c.time+" (全天合成)";
   $("cloudDate").innerHTML = `数据：${c.label}<br/>时间：${t}`;
 }
 setCloudLayer("ir");
@@ -316,7 +309,12 @@ const swirl = new Cesium.CallbackProperty(()=> (performance.now()/1000)*1.4, fal
 
 const focusTy = ()=> state.typhoons.find(t=>t.id===state.focusId);
 const curPt   = (ty)=> ty.points[ty.cursor];
-const posOf   = (ty)=> { const p=curPt(ty); return Cesium.Cartesian3.fromDegrees(p.lng,p.lat); };
+/* 路径点(含 lng/lat) -> Cesium 世界坐标 */
+const cartOf  = (p)=> Cesium.Cartesian3.fromDegrees(p.lng,p.lat);
+const posOf   = (ty)=> cartOf(curPt(ty));
+const emptyEnts = ()=>({track:[],cas:null,pts:[],eye:null,label:null,arrow:null,circle:null});
+/* 聚焦台风/游标变更后的统一刷新（显隐 -> 预报路径 -> 面板） */
+function refreshFocusView(){ applyVisibility(); drawForecast(); applyVisibility(); updatePanel(); }
 
 /* ================= 数据加载 ================= */
 function initYearSelector(){
@@ -330,34 +328,24 @@ async function loadYear(year){
   try{
     // 当年用 list_default（含实时活跃状态）；历史年份用 list_{year}
     // 注意：list_default 会忽略 year 参数、恒返回当前年，故历史年份必须用 list_{year}
-    const curYear = new Date().getFullYear();
-    const listUrl = (year>=curYear) ? `${API}/list_default` : `${API}/list_${year}`;
-    const data=await fetchJSONP(listUrl);
-    let raw=(data.typhoonList||[]).filter(t=> t[1]!=="nameless");
+    const data=await fetchTyphoonJson(listUrl(year));
+    const raw=namedTyphoons(data);
     if(raw.length===0){ toast(`${year}年暂无台风数据`); clearAllTyphoons(); buildChips([]); showEmptyPanel(`${year}年暂无台风记录`); showLoading(false); return; }
 
-    const active = raw.filter(t=>t[7]==="start");
-    let chosen = active.slice();
-    let fallback = false;
-    if(chosen.length < 2){                     // 无/仅一个活跃台风 -> 补充最近台风以演示多台风
-      fallback = active.length===0;
-      for(const t of raw){ if(chosen.length>=3) break; if(!chosen.includes(t)) chosen.push(t); }
-    }
+    // 优先活跃台风；不足时补充最近台风以演示多台风
+    const { chosen, noActive:fallback } = selectTyphoons(raw);
 
     showLoading(true,"正在获取台风路径详情…",`共 ${chosen.length} 个台风`);
     // 并行拉取详情
-    const details = await Promise.all(chosen.map(t=> fetchJSONP(`${API}/view_${t[0]}?id=${t[0]}`).catch(()=>null)));
+    const details = await Promise.all(chosen.map(t=> fetchTyphoonJson(viewUrl(t[0])).catch(()=>null)));
     clearAllTyphoons();
     state.typhoons = [];
     chosen.forEach((meta,i)=>{
       const d = details[i] && details[i].typhoon; if(!d) return;
-      const pts=(d[8]||[]).map(p=>({ time:p[1],ts:p[2],grade:p[3],lng:p[4],lat:p[5],
-        pres:p[6],wind:p[7],dir:p[8],speed:p[9],radius:p[10],forecast:p[11] }));
+      const pts=parseTrackPoints(d);
       if(!pts.length) return;
-      state.typhoons.push({
-        id:meta[0], num:meta[3], cn:d[2]||meta[2]||d[1], en:d[1]||"", meaning:d[6]||"",
-        active:meta[7]==="start", points:pts, cursor:pts.length-1, ents:{track:[],cas:null,pts:[],eye:null,label:null,arrow:null,circle:null}
-      });
+      state.typhoons.push(Object.assign(typhoonInfo(meta,d),
+        { points:pts, cursor:pts.length-1, ents:emptyEnts() }));
     });
 
     if(state.typhoons.length===0){ toast("台风路径数据为空"); buildChips([]); showEmptyPanel("未获取到有效的台风路径数据"); showLoading(false); return; }
@@ -405,12 +393,11 @@ function showEmptyPanel(msg,isErr){
 /* ================= 实体构建 ================= */
 function clearAllTyphoons(){
   viewer.entities.removeAll(); fcEnts.length=0;
-  state.typhoons.forEach(t=>{ t.ents={track:[],cas:null,pts:[],eye:null,label:null,arrow:null,circle:null}; });
+  state.typhoons.forEach(t=>{ t.ents=emptyEnts(); });
 }
 
 function buildTyphoonEntities(ty){
   const pts=ty.points; const e=ty.ents;
-  const carto=(p)=>Cesium.Cartesian3.fromDegrees(p.lng,p.lat);
 
   // 外发光描边（整条路径）
   const full=[]; pts.forEach(p=>full.push(p.lng,p.lat));
@@ -421,7 +408,7 @@ function buildTyphoonEntities(ty){
   // 分段着色路径
   for(let i=1;i<pts.length;i++){
     const seg = viewer.entities.add({ polyline:{
-      positions:[carto(pts[i-1]),carto(pts[i])],
+      positions:[cartOf(pts[i-1]),cartOf(pts[i])],
       width:4, material:Cesium.Color.fromCssColorString(gradeInfo(pts[i].grade).color),
       clampToGround:false, arcType:Cesium.ArcType.GEODESIC },
       properties:{ ty:ty.id, kind:"track" } });
@@ -431,7 +418,7 @@ function buildTyphoonEntities(ty){
   // 观测点
   pts.forEach((p,i)=>{
     const g=gradeInfo(p.grade);
-    const pt = viewer.entities.add({ position:carto(p),
+    const pt = viewer.entities.add({ position:cartOf(p),
       point:{ pixelSize:i===pts.length-1?0:6, color:Cesium.Color.fromCssColorString(g.color),
         outlineColor:Cesium.Color.WHITE.withAlpha(.85), outlineWidth:1.2,
         disableDepthTestDistance:Number.POSITIVE_INFINITY },
@@ -573,12 +560,12 @@ function updateChipActive(){ document.querySelectorAll(".ty-chip").forEach(c=>c.
 /* ================= 聚焦 / 飞行 ================= */
 function focusTyphoon(id,fly){
   state.focusId=id; stopPlay();
-  applyVisibility(); drawForecast(); applyVisibility(); updatePanel();
+  refreshFocusView();
   if(fly){ const ty=focusTy(); if(ty) viewer.flyTo(ty.ents.eye,{ offset:new Cesium.HeadingPitchRange(0,-Math.PI/2.2,2600000) }).catch(()=>{}); }
 }
 function flyToAll(){
   if(forceCamera) return;   // URL 指定了相机位置时不做自动全景飞行
-  const cs=[]; state.typhoons.forEach(t=>t.points.forEach(p=>cs.push(Cesium.Cartesian3.fromDegrees(p.lng,p.lat))));
+  const cs=[]; state.typhoons.forEach(t=>t.points.forEach(p=>cs.push(cartOf(p))));
   if(!cs.length) return;
   const sphere=Cesium.BoundingSphere.fromPoints(cs);
   viewer.camera.flyToBoundingSphere(sphere,{ duration:1.4, offset:new Cesium.HeadingPitchRange(0,-Math.PI/2.1, Math.max(sphere.radius*3.2,2600000)) });
@@ -603,7 +590,7 @@ handler.setInputAction((m)=>{
     const pr=picked.id.properties;
     const tyId=readProp(pr.ty); const kind=readProp(pr.kind);
     if(tyId!=null){ if(kind==="pt"){ const ty=state.typhoons.find(t=>t.id===tyId);
-        if(ty){ state.focusId=tyId; ty.cursor=readProp(pr.idx); applyVisibility(); drawForecast(); applyVisibility(); updatePanel(); }
+        if(ty){ state.focusId=tyId; ty.cursor=readProp(pr.idx); refreshFocusView(); }
       } else focusTyphoon(tyId,true);
     }
   }
@@ -623,8 +610,16 @@ handler.setInputAction((m)=>{
 });
 updateBaseButtons();
 
-$("modeAll").onclick=()=>{ state.mode="all"; $("modeAll").classList.add("on"); $("modeSingle").classList.remove("on"); applyVisibility(); flyToAll(); };
-$("modeSingle").onclick=()=>{ state.mode="single"; $("modeSingle").classList.add("on"); $("modeAll").classList.remove("on"); applyVisibility(); focusTyphoon(state.focusId,true); };
+/* 展示模式：全部台风全景 / 仅聚焦台风 */
+function setMode(mode){
+  state.mode=mode;
+  $("modeAll").classList.toggle("on", mode==="all");
+  $("modeSingle").classList.toggle("on", mode==="single");
+  applyVisibility();
+  if(mode==="all") flyToAll(); else focusTyphoon(state.focusId,true);
+}
+$("modeAll").onclick=()=>setMode("all");
+$("modeSingle").onclick=()=>setMode("single");
 
 $("timeline").oninput=(e)=>{ const ty=focusTy(); if(!ty) return; ty.cursor=+e.target.value; updatePanel(); };
 $("playBtn").onclick=function(){
@@ -640,7 +635,7 @@ function stopPlay(){ if(state.playTimer){ clearInterval(state.playTimer); state.
 
 $("fcBtn").onclick=function(){ state.showFc=!state.showFc; this.classList.toggle("on",state.showFc); drawForecast(); applyVisibility(); };
 $("ringBtn").onclick=function(){ state.showRing=!state.showRing; this.classList.toggle("on",state.showRing); applyVisibility(); };
-$("homeBtn").onclick=()=>{ state.mode="all"; $("modeAll").classList.add("on"); $("modeSingle").classList.remove("on"); applyVisibility(); flyToAll(); };
+$("homeBtn").onclick=()=>setMode("all");
 $("refreshBtn").onclick=()=>{ loadYear(state.year); toast("正在刷新台风与云图数据"); setCloudLayer(cloudKind); };
 $("autoBtn").onclick=function(){
   if(state.autoTimer){ clearInterval(state.autoTimer); state.autoTimer=null; this.classList.remove("on"); toast("已关闭自动刷新"); return; }
@@ -650,13 +645,12 @@ $("autoBtn").onclick=function(){
 $("fcBtn").classList.add("on"); $("ringBtn").classList.add("on");
 
 /* 云图开关 / 类型 / 浓度 */
-$("cloudToggle").onclick=function(){
-  cloudOn=!cloudOn; if(cloudLayer) cloudLayer.show=cloudOn; this.classList.toggle("on",cloudOn);
-  $("cloudOpRow").style.opacity=cloudOn?"1":".45"; toast(cloudOn?"已开启卫星云图":"已关闭卫星云图");
-};
+bindOverlayToggle("cloudToggle","cloudOpRow",cloudOn,(on)=>{
+  cloudOn=on; if(cloudLayer) cloudLayer.show=cloudOn;
+  toast(cloudOn?"已开启卫星云图":"已关闭卫星云图");
+});
 $("cloudSel").onchange=(e)=>{ setCloudLayer(e.target.value); if(cloudOn) toast("已切换云图数据源"); };
 $("cloudOp").oninput=(e)=>{ cloudAlpha=e.target.value/100; if(cloudLayer) cloudLayer.alpha=cloudAlpha; };
-if(cloudOn){ $("cloudToggle").classList.add("on"); $("cloudOpRow").style.opacity="1"; } else { $("cloudOpRow").style.opacity=".45"; }
 
 /* ================= 移动端面板抽屉 ================= */
 (function(){
