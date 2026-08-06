@@ -12,3 +12,6 @@ Thumbs.db
 # 依赖 / 日志
 node_modules/
 *.log
+
+# 测试覆盖率产物
+coverage/

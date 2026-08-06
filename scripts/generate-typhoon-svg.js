@@ -6,19 +6,13 @@
  */
 const fs = require("fs");
 const path = require("path");
+// 强度分级配色 / 转义 / JSONP 解析等纯函数集中在 lib/typhoon-utils.js（与前端共享）
+const TU = require("../lib/typhoon-utils.js");
 
 const API = "https://typhoon.nmc.cn/weatherservice/typhoon/jsons";
 
-// 强度分级配色（与网站前端保持一致）
-const GRADE = {
-  TD:      { cn: "热带低压",   color: "#3DB2FF" },
-  TS:      { cn: "热带风暴",   color: "#00D084" },
-  STS:     { cn: "强热带风暴", color: "#FFD500" },
-  TY:      { cn: "台风",       color: "#FF8C00" },
-  STY:     { cn: "强台风",     color: "#FF3B30" },
-  SuperTY: { cn: "超强台风",   color: "#C724B1" },
-};
-const gradeInfo = (g) => GRADE[g] || { cn: g || "未知", color: "#8aa0c8" };
+const GRADE = TU.GRADE;
+const gradeInfo = TU.gradeInfo;
 
 // 国家/地区参考标签（经度, 纬度, 名称）
 const GEO_LABELS = [
@@ -49,14 +43,14 @@ function loadCoastline() {
 async function fetchJSONP(url) {
   const res = await fetch(url, { headers: { "User-Agent": "typhoon-3d-tracker-bot" } });
   const text = await res.text();
-  const s = text.indexOf("{"), e = text.lastIndexOf("}");
-  if (s < 0 || e < 0) throw new Error("返回格式异常: " + url);
-  return JSON.parse(text.substring(s, e + 1));
+  try {
+    return TU.parseJsonpBody(text);
+  } catch (e) {
+    throw new Error("返回格式异常: " + url);
+  }
 }
 
-function esc(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+const esc = TU.esc;
 
 async function main() {
   const year = new Date().getUTCFullYear();
@@ -241,4 +235,9 @@ function renderSVG(typhoons, meta) {
   return parts.join("\n");
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// 作为 CLI 直接运行时才执行抓取+生成；被单元测试 require 时不触发副作用。
+if (require.main === module) {
+  main().catch((e) => { console.error(e); process.exit(1); });
+}
+
+module.exports = { main, renderSVG, fetchJSONP, esc, gradeInfo, loadCoastline, GRADE };

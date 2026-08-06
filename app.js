@@ -12,42 +12,22 @@
 
 const API = "https://typhoon.nmc.cn/weatherservice/typhoon/jsons";
 
-const GRADE = {
-  TD:      { cn:"热带低压",   color:"#3DB2FF" },
-  TS:      { cn:"热带风暴",   color:"#00D084" },
-  STS:     { cn:"强热带风暴", color:"#FFD500" },
-  TY:      { cn:"台风",       color:"#FF8C00" },
-  STY:     { cn:"强台风",     color:"#FF3B30" },
-  SuperTY: { cn:"超强台风",   color:"#C724B1" },
-};
-const gradeInfo = (g)=>GRADE[g]||{cn:g||"未知",color:"#8aa0c8"};
-
-/* 风向 / 移动方向：英文 -> 中文 + 罗盘方位角(度, 顺时针自北) */
-const DIR = {
-  N:  {cn:"北",     deg:0},   NNE:{cn:"北东北", deg:22.5}, NE: {cn:"东北",   deg:45},  ENE:{cn:"东东北", deg:67.5},
-  E:  {cn:"东",     deg:90},  ESE:{cn:"东东南", deg:112.5},SE: {cn:"东南",   deg:135}, SSE:{cn:"南东南", deg:157.5},
-  S:  {cn:"南",     deg:180}, SSW:{cn:"南西南", deg:202.5},SW: {cn:"西南",   deg:225}, WSW:{cn:"西西南", deg:247.5},
-  W:  {cn:"西",     deg:270}, WNW:{cn:"西西北", deg:292.5},NW: {cn:"西北",   deg:315}, NNW:{cn:"北西北", deg:337.5},
-};
-const dirCn  = (d)=> (DIR[d]&&DIR[d].cn) || d || "—";
-const dirDeg = (d)=> (DIR[d] ? DIR[d].deg : null);
-
-function fmtTime(str){ if(!str||str.length<12) return str||""; return `${str.slice(4,6)}-${str.slice(6,8)} ${str.slice(8,10)}:${str.slice(10,12)}`; }
+/* 纯函数工具集中在 lib/typhoon-utils.js（浏览器全局 TyphoonUtils），
+ * 便于单元测试与跨模块复用；此处解构为原有的本地名称，行为不变。 */
+const GRADE = TyphoonUtils.GRADE;
+const gradeInfo = TyphoonUtils.gradeInfo;
+const DIR = TyphoonUtils.DIR;
+const dirCn = TyphoonUtils.dirCn;
+const dirDeg = TyphoonUtils.dirDeg;
+const fmtTime = TyphoonUtils.fmtTime;
+const nrtTime = TyphoonUtils.nrtTime;
+const ymd = TyphoonUtils.ymd;
+const cloudConfig = TyphoonUtils.cloudConfig;
 
 async function fetchJSONP(url){
   const res=await fetch(url,{cache:"no-store"}); const text=await res.text();
-  const s=text.indexOf("{"),e=text.lastIndexOf("}");
-  if(s<0||e<0) throw new Error("返回格式异常");
-  return JSON.parse(text.substring(s,e+1));
+  return TyphoonUtils.parseJsonpBody(text);
 }
-
-/* 近实时时间戳(向前取整到10分钟, 减去 lag 分钟) -> YYYY-MM-DDTHH:mm:00Z */
-function nrtTime(lagMin){
-  const d=new Date(Date.now()-lagMin*60000);
-  d.setUTCSeconds(0,0); d.setUTCMinutes(Math.floor(d.getUTCMinutes()/10)*10);
-  return d.toISOString().slice(0,19)+"Z";
-}
-function ymd(offsetDays){ const d=new Date(Date.now()+offsetDays*86400000); return d.toISOString().slice(0,10); }
 
 const $=(id)=>document.getElementById(id);
 function toast(msg,isErr){ const t=$("toast"); t.textContent=msg; t.classList.toggle("err",!!isErr); t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),isErr?4200:2800); }
@@ -258,11 +238,6 @@ viewer.camera.setView(HOME);
  * 默认关闭：云图为不透明覆盖层，开启后会盖住地形底图，故首屏默认不显示，
  * 由用户按需在右侧“卫星云图”面板开启；默认浓度降到 0.5，开启后仍能透出地形。 */
 let cloudLayer=null, cloudOn=false, cloudKind="ir", cloudAlpha=0.5;
-function cloudConfig(kind){
-  if(kind==="geocolor") return { layer:"GOES-East_ABI_GeoColor", tms:"GoogleMapsCompatible_Level7", max:6, fmt:"image/png",  time:nrtTime(180), label:"GOES-East GeoColor · 近实时(美洲)" };
-  if(kind==="truecolor")return { layer:"VIIRS_NOAA20_CorrectedReflectance_TrueColor", tms:"GoogleMapsCompatible_Level9", max:7, fmt:"image/jpeg", time:ymd(-1), label:"VIIRS 真彩合成 · 每日" };
-  return { layer:"Himawari_AHI_Band13_Clean_Infrared", tms:"GoogleMapsCompatible_Level6", max:6, fmt:"image/png", time:nrtTime(90), label:"葵花9号 Band13 红外 · 近实时" };
-}
 function setCloudLayer(kind){
   cloudKind=kind; const c=cloudConfig(kind);
   if(cloudLayer){ viewer.imageryLayers.remove(cloudLayer,true); cloudLayer=null; }
