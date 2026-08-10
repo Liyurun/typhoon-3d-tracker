@@ -73,6 +73,7 @@
 <line x1="521.3" y1="336.8" x2="529.9" y2="337.8" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="529.9" y1="337.8" x2="542.8" y2="335.7" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="542.8" y1="335.7" x2="556.7" y2="331.7" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="556.7" y1="331.7" x2="568.5" y2="331.7" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="480.7" cy="330.7" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="489.2" cy="331.7" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="494.6" cy="331.7" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -81,10 +82,11 @@
 <circle cx="529.9" cy="337.8" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="542.8" cy="335.7" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="556.7" cy="331.7" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="556.7" cy="331.7" r="22" fill="url(#glow)"/>
-<circle cx="556.7" cy="331.7" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="568.7" y="321.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2616 琵鹭</text>
-<text x="568.7" y="336.7" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 995hPa</text>
+<circle cx="568.5" cy="331.7" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="568.5" cy="331.7" r="22" fill="url(#glow)"/>
+<circle cx="568.5" cy="331.7" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="580.5" y="321.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2616 琵鹭</text>
+<text x="580.5" y="336.7" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 995hPa</text>
 <line x1="729.0" y1="348.0" x2="730.1" y2="343.9" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="730.1" y1="343.9" x2="731.2" y2="323.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="731.2" y1="323.5" x2="725.8" y2="310.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
@@ -124,6 +126,7 @@
 <line x1="564.2" y1="209.6" x2="562.0" y2="206.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="562.0" y1="206.5" x2="557.7" y2="202.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="557.7" y1="202.5" x2="554.5" y2="198.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="554.5" y1="198.4" x2="549.2" y2="194.3" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="729.0" cy="348.0" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="730.1" cy="343.9" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="731.2" cy="323.5" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -164,10 +167,11 @@
 <circle cx="562.0" cy="206.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="557.7" cy="202.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="554.5" cy="198.4" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="554.5" cy="198.4" r="22" fill="url(#glow)"/>
-<circle cx="554.5" cy="198.4" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="566.5" y="188.4" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2615 灿鸿</text>
-<text x="566.5" y="203.4" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 998hPa</text>
+<circle cx="549.2" cy="194.3" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="549.2" cy="194.3" r="22" fill="url(#glow)"/>
+<circle cx="549.2" cy="194.3" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="561.2" y="184.3" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2615 灿鸿</text>
+<text x="561.2" y="199.3" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 998hPa</text>
 <line x1="847.9" y1="412.1" x2="842.5" y2="411.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="842.5" y1="411.0" x2="830.8" y2="408.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="830.8" y1="408.0" x2="823.3" y2="408.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
@@ -321,6 +325,9 @@
 <line x1="229.1" y1="262.5" x2="228.0" y2="259.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="228.0" y1="259.4" x2="225.9" y2="258.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="225.9" y1="258.4" x2="223.7" y2="257.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="223.7" y1="257.4" x2="221.6" y2="257.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="221.6" y1="257.4" x2="219.4" y2="256.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="219.4" y1="256.4" x2="217.3" y2="255.4" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="847.9" cy="412.1" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="842.5" cy="411.0" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="830.8" cy="408.0" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -475,10 +482,13 @@
 <circle cx="228.0" cy="259.4" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="225.9" cy="258.4" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="223.7" cy="257.4" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="223.7" cy="257.4" r="22" fill="url(#glow)"/>
-<circle cx="223.7" cy="257.4" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="235.7" y="247.4" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2613 白海豚</text>
-<text x="235.7" y="262.4" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 990hPa</text>
+<circle cx="221.6" cy="257.4" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="219.4" cy="256.4" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="217.3" cy="255.4" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="217.3" cy="255.4" r="22" fill="url(#glow)"/>
+<circle cx="217.3" cy="255.4" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="229.3" y="245.4" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2613 白海豚</text>
+<text x="229.3" y="260.4" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 990hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 3 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -495,5 +505,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-08-10 12:27 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-08-10 15:26 (北京时间)</text>
 </svg>
