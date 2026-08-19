@@ -64,11 +64,13 @@
 <text x="291.1" y="401.3" fill="#8ea3c9" font-size="10.5" text-anchor="start" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">马尼拉</text>
 <circle cx="94.0" cy="332.7" r="2.4" fill="#aebedd"/>
 <text x="99.0" y="336.2" fill="#8ea3c9" font-size="10.5" text-anchor="start" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">河内</text>
+<line x1="701.8" y1="462.9" x2="700.6" y2="460.9" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="701.8" cy="462.9" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="701.8" cy="462.9" r="22" fill="url(#glow)"/>
-<circle cx="701.8" cy="462.9" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="713.8" y="452.9" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2618 沙德尔</text>
-<text x="713.8" y="467.9" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 998hPa</text>
+<circle cx="700.6" cy="460.9" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="700.6" cy="460.9" r="22" fill="url(#glow)"/>
+<circle cx="700.6" cy="460.9" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="712.6" y="450.9" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2618 沙德尔</text>
+<text x="712.6" y="465.9" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 998hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -85,5 +87,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-08-19 14:37 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-08-19 17:30 (北京时间)</text>
 </svg>
