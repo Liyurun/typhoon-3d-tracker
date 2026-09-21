@@ -100,6 +100,9 @@
 <line x1="498.4" y1="233.0" x2="499.6" y2="227.9" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="499.6" y1="227.9" x2="503.4" y2="220.8" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="503.4" y1="220.8" x2="507.2" y2="216.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="507.2" y1="216.7" x2="512.3" y2="210.6" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="512.3" y1="210.6" x2="523.7" y2="203.5" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="523.7" y1="203.5" x2="532.5" y2="195.3" stroke="#FF8C00" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="642.4" cy="379.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="645.0" cy="374.4" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="648.8" cy="368.3" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -137,10 +140,13 @@
 <circle cx="499.6" cy="227.9" r="2.2" fill="#FFD500" opacity="0.85"/>
 <circle cx="503.4" cy="220.8" r="2.2" fill="#FFD500" opacity="0.85"/>
 <circle cx="507.2" cy="216.7" r="2.2" fill="#FFD500" opacity="0.85"/>
-<circle cx="507.2" cy="216.7" r="22" fill="url(#glow)"/>
-<circle cx="507.2" cy="216.7" r="6" fill="#FFD500" stroke="#fff" stroke-width="1.5"/>
-<text x="519.2" y="206.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2625 杜鹃</text>
-<text x="519.2" y="221.7" fill="#FFD500" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强热带风暴 · 30m/s · 980hPa</text>
+<circle cx="512.3" cy="210.6" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="523.7" cy="203.5" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="532.5" cy="195.3" r="2.2" fill="#FF8C00" opacity="0.85"/>
+<circle cx="532.5" cy="195.3" r="22" fill="url(#glow)"/>
+<circle cx="532.5" cy="195.3" r="6" fill="#FF8C00" stroke="#fff" stroke-width="1.5"/>
+<text x="544.5" y="185.3" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2625 杜鹃</text>
+<text x="544.5" y="200.3" fill="#FF8C00" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">台风 · 33m/s · 970hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -157,5 +163,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-21 11:13 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-21 19:56 (北京时间)</text>
 </svg>
