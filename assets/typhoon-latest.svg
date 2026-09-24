@@ -70,6 +70,8 @@
 <line x1="457.9" y1="364.2" x2="449.1" y2="359.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="449.1" y1="359.1" x2="436.5" y2="355.1" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="436.5" y1="355.1" x2="431.4" y2="352.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="431.4" y1="352.0" x2="423.8" y2="345.9" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="423.8" y1="345.9" x2="418.8" y2="350.0" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="483.2" cy="367.3" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="473.1" cy="366.3" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="461.7" cy="364.2" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -77,10 +79,12 @@
 <circle cx="449.1" cy="359.1" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="436.5" cy="355.1" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="431.4" cy="352.0" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="431.4" cy="352.0" r="22" fill="url(#glow)"/>
-<circle cx="431.4" cy="352.0" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="443.4" y="342.0" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2626 舒力基</text>
-<text x="443.4" y="357.0" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 995hPa</text>
+<circle cx="423.8" cy="345.9" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="418.8" cy="350.0" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="418.8" cy="350.0" r="22" fill="url(#glow)"/>
+<circle cx="418.8" cy="350.0" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="430.8" y="340.0" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2626 舒力基</text>
+<text x="430.8" y="355.0" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 23m/s · 990hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -97,5 +101,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-24 19:04 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-25 00:27 (北京时间)</text>
 </svg>
