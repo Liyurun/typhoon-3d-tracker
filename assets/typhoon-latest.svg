@@ -81,6 +81,9 @@
 <line x1="382.1" y1="334.7" x2="375.8" y2="334.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="375.8" y1="334.7" x2="374.5" y2="333.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="374.5" y1="333.7" x2="369.5" y2="331.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="369.5" y1="331.7" x2="369.5" y2="324.6" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="369.5" y1="324.6" x2="367.0" y2="321.5" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="367.0" y1="321.5" x2="363.2" y2="317.4" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="483.2" cy="367.3" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="473.1" cy="366.3" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="461.7" cy="364.2" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -99,10 +102,13 @@
 <circle cx="375.8" cy="334.7" r="2.2" fill="#FFD500" opacity="0.85"/>
 <circle cx="374.5" cy="333.7" r="2.2" fill="#FFD500" opacity="0.85"/>
 <circle cx="369.5" cy="331.7" r="2.2" fill="#FFD500" opacity="0.85"/>
-<circle cx="369.5" cy="331.7" r="22" fill="url(#glow)"/>
-<circle cx="369.5" cy="331.7" r="6" fill="#FFD500" stroke="#fff" stroke-width="1.5"/>
-<text x="381.5" y="321.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2626 舒力基</text>
-<text x="381.5" y="336.7" fill="#FFD500" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强热带风暴 · 28m/s · 982hPa</text>
+<circle cx="369.5" cy="324.6" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="367.0" cy="321.5" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="363.2" cy="317.4" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="363.2" cy="317.4" r="22" fill="url(#glow)"/>
+<circle cx="363.2" cy="317.4" r="6" fill="#FFD500" stroke="#fff" stroke-width="1.5"/>
+<text x="375.2" y="307.4" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2626 舒力基</text>
+<text x="375.2" y="322.4" fill="#FFD500" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强热带风暴 · 30m/s · 980hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -119,5 +125,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-26 05:04 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-09-26 11:24 (北京时间)</text>
 </svg>
