@@ -65,12 +65,16 @@
 <circle cx="94.0" cy="332.7" r="2.4" fill="#aebedd"/>
 <text x="99.0" y="336.2" fill="#8ea3c9" font-size="10.5" text-anchor="start" paint-order="stroke" stroke="#0a1330" stroke-width="2.5">河内</text>
 <line x1="646.2" y1="379.5" x2="638.6" y2="379.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="638.6" y1="379.5" x2="631.1" y2="379.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="631.1" y1="379.5" x2="621.0" y2="378.5" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="646.2" cy="379.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="638.6" cy="379.5" r="2.2" fill="#00D084" opacity="0.85"/>
-<circle cx="638.6" cy="379.5" r="22" fill="url(#glow)"/>
-<circle cx="638.6" cy="379.5" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
-<text x="650.6" y="369.5" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2627 彩云</text>
-<text x="650.6" y="384.5" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 18m/s · 998hPa</text>
+<circle cx="631.1" cy="379.5" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="621.0" cy="378.5" r="2.2" fill="#00D084" opacity="0.85"/>
+<circle cx="621.0" cy="378.5" r="22" fill="url(#glow)"/>
+<circle cx="621.0" cy="378.5" r="6" fill="#00D084" stroke="#fff" stroke-width="1.5"/>
+<text x="633.0" y="368.5" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2627 彩云</text>
+<text x="633.0" y="383.5" fill="#00D084" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">热带风暴 · 20m/s · 995hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -87,5 +91,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-10-01 05:50 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-10-01 12:02 (北京时间)</text>
 </svg>
