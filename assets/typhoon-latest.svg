@@ -110,6 +110,9 @@
 <line x1="428.9" y1="371.4" x2="420.0" y2="369.3" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="420.0" y1="369.3" x2="412.5" y2="366.3" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="412.5" y1="366.3" x2="403.6" y2="363.2" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="403.6" y1="363.2" x2="394.8" y2="360.2" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="394.8" y1="360.2" x2="387.2" y2="357.1" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="387.2" y1="357.1" x2="380.9" y2="354.1" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="763.7" cy="439.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="751.1" cy="438.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="741.0" cy="435.5" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -157,10 +160,13 @@
 <circle cx="420.0" cy="369.3" r="2.2" fill="#C724B1" opacity="0.85"/>
 <circle cx="412.5" cy="366.3" r="2.2" fill="#C724B1" opacity="0.85"/>
 <circle cx="403.6" cy="363.2" r="2.2" fill="#C724B1" opacity="0.85"/>
-<circle cx="403.6" cy="363.2" r="22" fill="url(#glow)"/>
-<circle cx="403.6" cy="363.2" r="6" fill="#C724B1" stroke="#fff" stroke-width="1.5"/>
-<text x="415.6" y="353.2" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2630 蔷琵</text>
-<text x="415.6" y="368.2" fill="#C724B1" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">超强台风 · 68m/s · 905hPa</text>
+<circle cx="394.8" cy="360.2" r="2.2" fill="#C724B1" opacity="0.85"/>
+<circle cx="387.2" cy="357.1" r="2.2" fill="#C724B1" opacity="0.85"/>
+<circle cx="380.9" cy="354.1" r="2.2" fill="#C724B1" opacity="0.85"/>
+<circle cx="380.9" cy="354.1" r="22" fill="url(#glow)"/>
+<circle cx="380.9" cy="354.1" r="6" fill="#C724B1" stroke="#fff" stroke-width="1.5"/>
+<text x="392.9" y="344.1" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2630 蔷琵</text>
+<text x="392.9" y="359.1" fill="#C724B1" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">超强台风 · 65m/s · 910hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -177,5 +183,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-10-21 11:13 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-10-21 19:07 (北京时间)</text>
 </svg>
