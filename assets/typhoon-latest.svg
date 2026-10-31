@@ -128,6 +128,7 @@
 <line x1="551.1" y1="317.4" x2="556.0" y2="315.4" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="556.0" y1="315.4" x2="558.5" y2="312.3" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="558.5" y1="312.3" x2="560.9" y2="312.3" stroke="#C724B1" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="560.9" y1="312.3" x2="564.6" y2="313.4" stroke="#FF3B30" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="843.0" cy="440.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="839.3" cy="440.5" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="835.7" cy="442.6" r="2.2" fill="#00D084" opacity="0.85"/>
@@ -193,10 +194,11 @@
 <circle cx="556.0" cy="315.4" r="2.2" fill="#C724B1" opacity="0.85"/>
 <circle cx="558.5" cy="312.3" r="2.2" fill="#C724B1" opacity="0.85"/>
 <circle cx="560.9" cy="312.3" r="2.2" fill="#C724B1" opacity="0.85"/>
-<circle cx="560.9" cy="312.3" r="22" fill="url(#glow)"/>
-<circle cx="560.9" cy="312.3" r="6" fill="#C724B1" stroke="#fff" stroke-width="1.5"/>
-<text x="572.9" y="302.3" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2631 烟花</text>
-<text x="572.9" y="317.3" fill="#C724B1" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">超强台风 · 52m/s · 935hPa</text>
+<circle cx="564.6" cy="313.4" r="2.2" fill="#FF3B30" opacity="0.85"/>
+<circle cx="564.6" cy="313.4" r="22" fill="url(#glow)"/>
+<circle cx="564.6" cy="313.4" r="6" fill="#FF3B30" stroke="#fff" stroke-width="1.5"/>
+<text x="576.6" y="303.4" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2631 烟花</text>
+<text x="576.6" y="318.4" fill="#FF3B30" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强台风 · 48m/s · 945hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -213,5 +215,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-11-01 04:57 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-11-01 07:58 (北京时间)</text>
 </svg>
