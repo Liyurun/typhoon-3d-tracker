@@ -68,15 +68,21 @@
 <line x1="560.3" y1="342.9" x2="552.7" y2="338.8" stroke="#00D084" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="552.7" y1="338.8" x2="542.6" y2="335.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <line x1="542.6" y1="335.7" x2="527.4" y2="331.7" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="527.4" y1="331.7" x2="517.3" y2="328.6" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="517.3" y1="328.6" x2="508.5" y2="327.6" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+<line x1="508.5" y1="327.6" x2="502.2" y2="325.6" stroke="#FFD500" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
 <circle cx="566.6" cy="345.9" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="560.3" cy="342.9" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="552.7" cy="338.8" r="2.2" fill="#00D084" opacity="0.85"/>
 <circle cx="542.6" cy="335.7" r="2.2" fill="#FFD500" opacity="0.85"/>
 <circle cx="527.4" cy="331.7" r="2.2" fill="#FFD500" opacity="0.85"/>
-<circle cx="527.4" cy="331.7" r="22" fill="url(#glow)"/>
-<circle cx="527.4" cy="331.7" r="6" fill="#FFD500" stroke="#fff" stroke-width="1.5"/>
-<text x="539.4" y="321.7" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2632 查帕卡</text>
-<text x="539.4" y="336.7" fill="#FFD500" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强热带风暴 · 25m/s · 985hPa</text>
+<circle cx="517.3" cy="328.6" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="508.5" cy="327.6" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="502.2" cy="325.6" r="2.2" fill="#FFD500" opacity="0.85"/>
+<circle cx="502.2" cy="325.6" r="22" fill="url(#glow)"/>
+<circle cx="502.2" cy="325.6" r="6" fill="#FFD500" stroke="#fff" stroke-width="1.5"/>
+<text x="514.2" y="315.6" fill="#fff" font-size="13" font-weight="700" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">2632 查帕卡</text>
+<text x="514.2" y="330.6" fill="#FFD500" font-size="11" font-weight="600" text-anchor="start" paint-order="stroke" stroke="#050912" stroke-width="3">强热带风暴 · 28m/s · 982hPa</text>
 <text x="46" y="26" fill="#ffffff" font-size="18" font-weight="800">🌀 台风实时路径 · Typhoon Live Tracks</text>
 <text x="46" y="45" fill="#8aa0c8" font-size="12">当前活跃台风 1 个 · 数据:中央气象台</text>
 <g font-size="10.5">
@@ -93,5 +99,5 @@
 <rect x="772" y="113" width="10" height="10" rx="2" fill="#C724B1"/>
 <text x="786" y="121" fill="#c8d3e8">超强台风</text>
 </g>
-<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-11-08 05:25 (北京时间)</text>
+<text x="880" y="550" fill="#5f7196" font-size="11" text-anchor="end">更新于 2026-11-08 12:19 (北京时间)</text>
 </svg>
